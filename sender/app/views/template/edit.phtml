@@ -1,0 +1,261 @@
+<ul class="breadcrumb">
+				<li>
+					<i class="icon-home"></i>
+					<a href="index.html">Home</a>
+					<i class="icon-angle-right"></i> 
+				</li>
+				<li><a href="#">模板管理</a><i class="icon-angle-right"></i></li>
+				<li>
+					<i class="icon-edit"></i>
+					<a href="#"><?php echo $info->id > 0 ?  '编辑模板' : '新增模板'?></a>
+				</li>
+			</ul>
+			<?php if(isset($message_info)) :?>
+			<div class="alert alert-<?php echo isset($message_info['success']) ? 'success' : 'error'?>">
+			<button type="button" class="close" data-dismiss="alert">×</button>
+			<?php foreach($message_info as $k=>$v):?>
+			<?php echo $v ?><br />
+			<?php endforeach ;?>
+			</div>
+			<?php endif ;?>
+			<div class="row-fluid sortable">
+				<div class="box span12">
+					<div class="box-header" data-original-title>
+						<h2><i class="halflings-icon edit"></i><span class="break"></span><?php echo $info->id > 0 ?  '编辑模板' : '新增模板'?></h2>
+						<div class="box-icon">
+							<a href="/template/index">模板列表</a>
+							<a href="#" class="btn-minimize"><i class="halflings-icon chevron-up"></i></a>
+							<a href="#" class="btn-close"><i class="halflings-icon remove"></i></a>
+						</div>
+					</div>
+					<div class="box-content">
+						<?php echo \Phalcon\Tag::form(array("", "method" => "post",'class'=>'form-horizontal','id'=>'template_post')); ?>
+						  <?php echo \Phalcon\Tag::hiddenField(array("id","value"=>$info->id));
+//						  echo \Phalcon\Tag::hiddenField(array("division_id","value"=>$info->division_id ? $info->division_id : $division_id))
+						  
+						  ?>
+						  <fieldset>
+							
+							<div class="control-group">
+							  <label class="control-label" for="typeahead">模板名称</label>
+							  <div class="controls">
+								<?php echo \Phalcon\Tag::textField(array("name", "class" => "span6 typeahead" , "value"=>$info->name,'maxlength'=>30 ,'onkeyup'=>"value=value.replace(/(^\s*)/g,'')" )) ?>
+							  </div>
+							</div>
+							
+
+							<div class="control-group">
+							  <label class="control-label" for="typeahead">模板描述</label>
+							  <div class="controls">
+								<?php echo \Phalcon\Tag::textArea(array("decription", "class" => "span6 typeahead",'rows'=>1,"value"=>$info->decription,'maxlength'=>60)) ?>
+							  </div>
+							</div>
+							
+							<div class="control-group">
+							  <label class="control-label" for="select_countent">样本模板</label>
+							  <div class="controls" id="select_countent">
+								<?php if(isset($template_list)) :?>
+								<?php foreach($template_list as $k=>$v) :
+								
+									if($v['path']){
+										$v['content'] = file_exists($v['path']) ? file_get_contents($v['path']) : ('模板文件不存在:'.$v['path']);
+									}
+								?>
+								<div style="float:left;width:120px">
+								<a class="selecta" href="<?php echo $v['url']?>" id="content_v<?php echo $k ?>">
+								<img src="<?php echo $v['image']?>" width="100px">
+								</a>
+								<div align="center"><?php echo $v['name'] ?></div>
+								</div>
+								<textarea class="hide" id="content_v<?php echo $k ?>_textarea"><?php echo $v['content']?></textarea>
+								<?php endforeach ;?>
+								<?php endif ;?>
+								<!-- <a href="/template/content" id="getcontent" class="btn btn-small btn-primary">更多</a>
+								<a href="javascript:;" id="clearcontent" class="btn btn-small btn-primary">清空</a>
+								 -->
+							  </div>
+							</div>
+							
+							
+							<div class="control-group">
+							  <label class="control-label" for="content">模板内容</label>
+							  <div class="controls">
+								<?php echo \Phalcon\Tag::textArea(array("content", "class" => "span11 typeahead",'rows'=>15 ,'id'=>'content_source', "value"=>$info->content)) ?>
+							  </div>
+							</div>
+							
+							<div class="control-group hide">
+							  <label class="control-label" for="engine">模板引擎</label>
+							  <div class="controls">
+								  <?php 
+								  echo \Phalcon\Tag::selectStatic(array("engine", array('PHP' => 'PHP', 'Smarty' => 'Smarty','Volt'=>'Volt'),"value"=>$info->engine));
+								  ?>
+								  
+							  </div>
+							</div>
+							
+							<div class="control-group">
+							  <label class="control-label" for="type">模板类型</label>
+							  <div class="controls">
+								  <?php 
+								  echo \Phalcon\Tag::selectStatic(array("type", $type_name,"value"=>$info->type));
+								  ?>
+								</div>
+							</div>
+							
+							
+							<div class="control-group">
+							  <label class="control-label" for="status">模板状态</label>
+							  <div class="controls">
+								  <?php 
+								  echo \Phalcon\Tag::selectStatic(array("status", array('Enabled' => '启用', 'Disabled' => '未启用'),"value"=>$info->status));
+								  ?>
+								</div>
+							</div>
+							
+							<div class="form-actions">
+							<?php echo \Phalcon\Tag::hiddenField(array("ajax","value"=>0));
+							  echo \Phalcon\Tag::submitButton(array("确定",'class'=>'btn btn-primary','id'=>'submit')) ?>
+							  <button type="reset" id="reset" class="btn">重置</button>
+							  <button type="reset" id="back" class="btn">取消</button>
+							</div>
+						  </fieldset> 
+						<?php echo \Phalcon\Tag::endForm(); ?>
+					</div>
+				</div><!--/span-->
+
+			</div><!--/row-->
+
+
+	</div><!--/.fluid-container-->
+	<script>
+		$(document).ready(function(){
+			$('#submit').click(function(){
+				var name = $('#name').val();
+				var content = $('#content_source').val();
+				if(!name){
+					$('#myModal>.modal-body>p').html('模板名称不能为空');
+					$('#myModal').modal('show');
+					return false;
+				}
+				
+				var all_leng = name.length;
+				var name_zh = name.replace(/[•\u4E00-\u9FA5\.\-]/g,'');
+				var length = all_leng +name_zh.length*2;
+				if(length>50){
+					$('#myModal>.modal-body>p').html('模板名称太长');
+					$('#myModal').modal('show');
+					return false;
+				}
+				else if(length<3){
+					$('#myModal>.modal-body>p').html('模板名称太短');
+					$('#myModal').modal('show');
+					return false;
+				}
+				
+				if(!content){
+					$('#myModal>.modal-body>p').html('模板内容不能为空');
+					$('#myModal').modal('show');
+					return false;
+				}
+				
+				$('#ajax').val(1);
+				var pdata=$('#template_post').serialize();
+				
+				$.ajax({
+			        type: "POST",
+			        url: '/template/edit',
+			        data: pdata,
+			        async:false,
+			        dataType:'json',
+			        success: function(data){
+			        	$('#myModal>.modal-body>p').html(data.msg);
+						$('#myModal').modal('show');
+						if(!data.status){
+							location.href='/template/list/1';
+							return;
+							$('#myModal>.modal-body>p').append('<p><span id="jumpsec">5</span>秒后跳转到 <a  href="/template/index">列表页面</a>，<a id="nojump" href="javascript:;">取消</a></p>');
+							window.template_jump = setInterval('jumpsec()',1000);
+						}
+			    	}
+			    });
+				
+			    return false;
+				
+			});
+
+			$('#select_countent>div>a.selecta').click(function(){
+				$('#select_countent>div>a.selecta').find('img').css('border','0px');
+				var href=$(this).attr('href');
+				var id=$(this).attr('id');
+				var content = '';
+				
+				if(href && href.indexOf('javascript')==-1){
+					$.ajax({
+				        type: "POST",
+				        url: href,
+				        data: {},
+				        async:false,
+				        success: function(data){
+				        	content = data;
+				    	}
+				    });
+				}else{
+					content = $('#'+id+'_textarea').val();
+				}
+				$(this).find('img').css('border','2px solid #0cf');
+				$('#content_source').val(content);
+				
+				return false;
+			});
+			$('#getcontent').click(function(){
+				var href=$(this).attr('href');
+				$.ajax({
+			        type: "POST",
+			        url: href,
+			        data: {},
+			        async:false,
+			        success: function(data){
+			        	$('#myModal>.modal-body>p').html(data);
+			        	$('#myModal').modal('show')
+			    	}
+			    });
+				return false;
+			});
+			$('#clearcontent').click(function(){
+				$('#content_source').val('');
+			});
+
+			$('#nojump').live('click',function(){
+				if(window.template_jump){
+					 clearInterval(window.template_jump);
+					 $('#myModal').modal('hide');
+				}
+				return false;
+			});
+
+			
+			$('#reset').click(function(){
+				$('#content_source').val('');
+				$('#select_countent>div>a.selecta').find('img').css('border','0px');
+			});
+			$('#back').click(function(){
+				location.href='/template/list/1';
+
+			});
+			
+			
+			
+		});
+		function jumpsec(){
+			var sec = $('#jumpsec').html();
+			sec = parseInt(sec);
+			if(sec>1){
+				sec = sec-1;
+				$('#jumpsec').html(sec);
+			}else{
+				location.href='/template/list/1';
+			}
+		}
+	</script>
+	

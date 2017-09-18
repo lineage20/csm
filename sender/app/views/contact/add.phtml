@@ -1,0 +1,172 @@
+<!--<style type="text/css">  
+   .alert alert-danger{color:#a94442;background-color:#f2dede;border-color:#ebccd1}
+ </style> -->
+			<div class="row-fluid sortable">
+				<div class="box span12">
+					<div class="box-header" data-original-title>
+						<h2><i class="halflings-icon edit"></i><span class="break"></span>添加联系人</h2>
+						<div class="box-icon">
+							<a href="#" class="btn-setting"><i class="halflings-icon wrench"></i></a>
+							<a href="#" class="btn-minimize"><i class="halflings-icon chevron-up"></i></a>
+							<a href="#" class="btn-close"><i class="halflings-icon remove"></i></a>
+						</div>
+					</div>
+                                    <!--<div class="alert alert-danger"></div>-->
+					<div class="box-content">
+                                            <form class="form-horizontal" method="post" id="category_post" action="/contact/addHandle">
+							<fieldset>
+                                                          <?php
+                                                                $type = Group::find();
+                                                          ?>
+                                                          <div class="control-group">
+								<label class="control-label" for="selectError3">分组</label>
+								<div class="controls">
+                                                                    <select id="type" name="type">
+                                                                        
+                                                                        <?php foreach($type as $val){?>
+                                                                        <option value='<?php echo $val->id;?>'><?php echo $val->name;?></option>
+                                                                        <?php }?>
+                                                                        
+								  </select>
+								</div>
+							  </div>
+                                                            
+                                                          <div class="control-group">
+								<label class="control-label" for="focusedInput">联系人姓名</label>
+								<div class="controls">
+                                                                    <input class="input-xlarge focused" id="name" name="name" type="text" value="">
+								</div>
+							  </div>
+                                                            
+                                                          <div class="control-group">
+								<label class="control-label" for="focusedInput">联系人手机号码</label>
+								<div class="controls">
+                                                                    <input class="input-xlarge focused" id="mobile" name="mobile" type="text" value="">
+								</div>
+							  </div>
+                                                            
+                                                          <div class="control-group">
+								<label class="control-label" for="focusedInput">联系人邮箱</label>
+								<div class="controls">
+                                                                    <input class="input-xlarge focused" id="email" name="email" type="text" value="">
+								</div>
+							  </div>
+                                                          
+
+                                                          <div class="control-group">
+								<label class="control-label" for="selectError3">联系人描述</label>
+								<div class="controls">
+                                                                    <textarea name="description" id="description"></textarea>
+								</div>
+							  </div>
+
+							  <div class="form-actions">
+                                                              <button id="submit" type="button" class="btn btn-primary">添加</button>
+                                                              <button class="btn" type="submit" id="setoff" name="setoff" value="setoff">取消</button>
+							  </div>
+							</fieldset>
+						  </form>
+					
+					</div>
+				</div><!--/span-->
+			
+			</div><!--/row-->
+<script language="javascript" type="text/javascript">
+    
+
+$(function(){
+    $("#submit").click(function(){
+        var name = $('#name').val();
+        var mobile = $('#mobile').val();
+        var email = $('#email').val();
+        var type = $("#type").val();
+        if(!name){
+                $('#myModal>.modal-body>p').html('联系人姓名不能为空');
+                $('#myModal').modal('show');
+                return false;
+        }
+        if ($.trim(name) == "") {
+             $('#myModal>.modal-body>p').html('联系人姓名不能为空格');
+             $('#myModal').modal('show');
+            return false;
+        }
+        if(name.length > 10){
+            $('#myModal>.modal-body>p').html('联系人姓名长度不能超过10');
+            $('#myModal').modal('show');
+            return false;
+        }
+        if (!email && !mobile) {
+             $('#myModal>.modal-body>p').html('联系人邮箱手机号码不能同时为空');
+             $('#myModal').modal('show');
+            return false;
+        }
+        var reg = /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/;
+        if(email != '' && !reg.test($("#email").val())){
+            $('#myModal>.modal-body>p').html('联系人邮箱格式不正确');
+             $('#myModal').modal('show');
+            return false;
+        }
+//        if (!mobile) {
+//             $('#myModal>.modal-body>p').html('联系人手机号码不能为空');
+//             $('#myModal').modal('show');
+//            return false;
+//        }
+//        var myreg = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1}))+\d{8})$/; 
+//        if(mobile != '' && !myreg.test($("#mobile").val())){
+//            $('#myModal>.modal-body>p').html('联系人手机号码格式不正确');
+//             $('#myModal').modal('show');
+//            return false;
+//        }
+        
+//        var setoff = $("#setoff").val();
+        var name = $("#name").val();
+        var description = $("#description").val();
+        $.post('/contact/addHandle',{name:name,description:description,mobile:mobile,email:email,type:type},function(data){
+            $('#myModal>.modal-body>p').html(data.msg);
+            $('#myModal').modal('show');
+            if(!data.status){
+//                    $('#myModal>.modal-body>p').append('<p><span id="jumpsec">5</span>秒后跳转到 <a  href="/category/index">列表页面</a>，<a id="nojump" href="javascript:;">取消</a></p>');
+//                    window.template_jump = setInterval('jumpsec()',1000);
+                    window.template_jump = setInterval("location.href='/contact/index'",600);
+            }
+        },'json');
+    });
+    $('#nojump').live('click',function(){
+            if(window.template_jump){
+                     clearInterval(window.template_jump);
+                     $('#myModal').modal('hide');
+            }
+            return false;
+    });
+});
+function jumpsec(){
+    var sec = $('#jumpsec').html();
+    sec = parseInt(sec);
+    if(sec>1){
+            sec = sec-1;
+            $('#jumpsec').html(sec);
+    }else{
+            location.href='/group/index';
+    }
+}
+
+$("#parent_id").change(function(){
+   var id = $(this).children('option:selected').val();
+   $.post('getLang',{id:id},function(data){
+        
+        $("#hd_language").val(data.data['language']);
+        $("#language").val(data.data['language']).attr("disabled", "true");
+       
+//       if(data.data['parent_id'] === null){
+//            $("#hd_language").val(data.data['language']);
+//            $("#language").val(data.data['language']).removeAttr("disabled");
+//       }
+       
+       if( id === 'NULL'){
+           $("#language").val(data.data['language']).removeAttr("disabled");
+       }
+       
+   },'json');
+});
+</script>		
+                       

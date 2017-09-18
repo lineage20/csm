@@ -1,0 +1,182 @@
+﻿<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<title>财经日历</title>
+<link rel=stylesheet media=screen href="//m.24k.hk/public/css/mobile.css"/>
+
+<script src="//m.24k.hk/public/js/jquery.min.js" type="text/javascript"></script>
+<script src="//m.24k.hk/public/js/popup.js" type="text/javascript"></script>
+<script src="//m.24k.hk/public/js/swipe.js" type="text/javascript"></script>
+<script src="//m.24k.hk/public/js/index.js" type="text/javascript"></script>
+<script src="//m.24k.hk/public/js/shortcuts.js" type="text/javascript"></script>
+<script src="//m.24k.hk/public/js/common.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+$(function(){
+  	$(".news-detail-list table").attr("border","0").attr("align","").css("width","100%");
+  });
+</script>
+
+  <!-- footer end -->
+</section>
+<script type="text/javascript" src="//m.24k.hk/public/js/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="//m.24k.hk/public/js/finance.js"></script>
+<script type="text/javascript" src="//m.24k.hk/public/js/quote.js"></script>
+<script type="text/javascript" src="//m.24k.hk/public/js/highstock.js"></script>
+<script type="text/javascript" src="//m.24k.hk/public/js/newquote.js"></script>
+<script type="text/javascript">
+var oaPath='';
+var lang='zh';
+$(document).ready(function(e){
+	ajaxGetDatas();
+	//每隔断时间调用下
+	setInterval(ajaxGetDatas,60000);
+
+	//环球商品报价的走势图 2013.06.03
+	$("#quote_gold").click(function(){//紐約期金
+		window.location="/quote-futures-gold.html";
+	})
+	$("#quote_cu").click(function(){//LME銅
+		window.location="/quote-futures-cu.html";
+	})
+	$("#quote_oil").click(function(){//紐約原油
+		window.location="/quote-futures-oil.html";
+	})
+
+	//CFTC持仓比例的走势图 2013.06.03
+	$("#cftc_gold").click(function(){//紐約期金
+		window.location="/quote-cftc-gold.html";
+	})
+	$("#cftc_silver").click(function(){//纽约期银
+		window.location="/quote-cftc-silver.html";
+	})
+	$("#cftc_usd").click(function(){//美元指数
+		window.location="/quote-cftc-usd.html";
+	})
+	$("#cftc_cu").click(function(){//纽约期铜
+		window.location="/quote-cftc-cu.html";
+	})
+	$("#cftc_oil").click(function(){//紐約原油
+		window.location="/quote-cftc-oil.html";
+	})
+
+	//贵金属库存的走势图 2013.06.03
+	$("#etf_gold").click(function(){//etf黄金
+		window.location="/quote-etf-gold.html";
+	})
+	$("#etf_silver").click(function(){//etf白银
+		window.location="/quote-etf-silver.html";
+	})
+	$("#comex_gold").click(function(){//Comex黄金
+		window.location="/quote-comex-gold.html";
+	})
+	$("#comex_silver").click(function(){//Comex白银
+		window.location="/quote-comex-silver.html";
+	})
+
+	//股票指数的走势图  2013.06.14
+	$("#stock_dqs").click(function(){//道琼斯指数
+		window.location="/quote-stock-dqs.html";
+	})
+	$("#stock_sz").click(function(){//上证指数
+		window.location="/quote-stock-sz.html";
+	})
+	$("#stock_hs").click(function(){//恒生指数
+		window.location="/quote-stock-hs.html";
+	})
+	$("#stock_ygfs").click(function(){//英国富时
+		window.location="/quote-stock-ygfs.html";
+	})
+	$("#stock_dgdax").click(function(){//德国dax
+		window.location="/quote-stock-dgdax.html";
+	})
+	$("#stock_rj").click(function(){//日经指数
+		window.location="/quote-stock-rj.html";
+	})
+	$("#stock_fgcac").click(function(){//法国CAC
+		window.location="/quote-stock-fgcac.html";
+	})
+
+	//外汇牌价的走势图  2013.07.08
+	$("#fx_om").click(function(){//欧元美元
+		window.location="/quote-fx-om.html";
+	})
+	$("#fx_mr").click(function(){//美元日元
+		window.location="/quote-fx-mr.html";
+	})
+	$("#fx_ym").click(function(){//英镑美元
+		window.location="/quote-fx-ym.html";
+	})
+	$("#fx_am").click(function(){//澳元美元
+		window.location="/quote-fx-am.html";
+	})
+	$("#fx_mrl").click(function(){//美元瑞郎
+		window.location="/quote-fx-mrl.html";
+	})
+	$("#fx_mj").click(function(){//美元加元
+		window.location="/quote-fx-mj.html";
+	})
+
+
+	//环球商品报价：上海交易所报价的走势图  2013.07.08
+	$("#sge_hj").click(function(){//沪金9999
+		window.location="/quote-sge-hj.html";
+	})
+	$("#sge_bj").click(function(){//铂金9995
+		window.location="/quote-sge-bj.html";
+	})
+	$("#sge_hjtd").click(function(){//黄金TD
+		window.location="/quote-sge-hjtd.html";
+	})
+	$("#sge_bytd").click(function(){//白银TD
+		window.location="/quote-sge-bytd.html";
+	})
+
+	//setInterval("loadQuestionHTML('zh')",10000);
+  	var wsUrl = "ws://kdata.gwfx.com:8087/websocket.do";
+  	//var wsUrl = "ws://testweb.gwfx.com:8087/websocket.do";
+ 	var wsData = "service=HqDataWebSocketService&method=pushMarketprice&dataType=simpleMarketPrice";
+ 	var httpUrl = "http://kdata.gwfx.com:8099/gateway.do?service=HqDataService&method=getMarkrtPriceDataFromCache&symbol=XAUUSD|XAGUSD|EURUSD|USDJPY|GBPUSD|AUDUSD|USDCHF|USDCAD&dataType=simpleMarketPrice";
+ 	//var httpUrl = "http://testweb.gwfx.com:8099/gateway.do?service=HqDataService&method=getMarkrtPriceDataFromCache";
+ 	getMarketpriceCrossDomain4FinanceIndex(httpUrl);
+ 	getAllMarketprice(wsUrl,wsData,httpUrl);
+});
+/**
+ * 调用全部ajax读取数据
+ */
+function ajaxGetDatas(){
+	//现货黄金
+	//ajaxGet24kDatas();
+	//上海黄金交易所
+	ajaxSGEDatas();
+	//香港金银贸易场
+	ajaxCGSEDatas();
+	//外汇牌价
+	//ajaxGetFxDatas();
+	//国外期货
+	ajaxFuturesDatas();
+	//股票指数
+	ajaxStockDatas();
+	//国债
+	ajaxBondsDatas();
+}
+function searchDateFun(){
+    var d=$("#searchDate").val();
+    if(typeof(d)=='undefined' || $.trim(d)==''){
+            alert("请选择查询日期");
+            return;
+    }
+    location.href='/calendar/cf/'+d+".html";
+}
+</script>
+
+</head>
+
+<body>
+<div class="rili-box">
+    <?php echo $datas;?>
+</div>
+</body>
+</html>

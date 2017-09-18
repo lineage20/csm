@@ -1,0 +1,115 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<title>外汇投资交易财经日历 - 金道环球投资</title>
+<!--<link rel="stylesheet" href="http://www.gwfx.com/public/css/global.css" />
+<link rel="stylesheet" href="http://www.gwfx.com/public/css/data_ver3.0.css" />
+<link rel="stylesheet" href="http://www.gwfx.com/public/floatBox/css/base.css" />-->
+
+<link href="/gwfx/css/zixun_white.css" type="text/css" rel="stylesheet" />
+<script src="http://www.gwfx.com/public/js/jquery.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="http://www.gwfx.com/public/js/finance.js" type="text/javascript"></script>
+<script type="text/javascript" src="http://www.gwfx.com/public/js/My97DatePicker/WdatePicker.js"></script>
+
+<link href="http://www.gwfx.com/common/css/lp_public.css" rel="stylesheet">
+<link href="http://www.gwfx.com/public/css/font.css" rel="stylesheet">
+<link href="http://www.gwfx.com/public/css/calenda/calenda.css" type="text/css" rel="stylesheet">
+
+
+</head>
+
+<body>
+    <div class="rili-box">
+	<?php echo $datas;?>  
+</div>
+</body>
+
+<script type="text/javascript" src="http://www.gwfx.com/public/js/finance.js"></script>
+<script type="text/javascript" src="http://www.gwfx.com/public/js/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript">
+var oaPath='http://oa.gwfx.com';
+var lang='zh';
+function searchDateFun(){
+	var d=$("#searchDate").val();
+	
+	if(typeof(d)=='undefined' || $.trim(d)==''){
+		alert("&#35831;&#36873;&#25321;&#26597;&#35810;&#26085;&#26399;");
+		return;
+	}
+	location.href='/calendar/gwfx/'+d+".html";
+}
+
+$(".item-box li,.chanp-ulist li").click(function(){
+	$(this).addClass("li-on").siblings().removeClass("li-on");
+})
+$(".more-xuanz").click(function(){
+	var iClassName = $("#shuanXuan").attr("class");
+	if(iClassName == ""){
+		$(this).children().addClass("i-up");
+		$(".more-list").show();
+	}else if(iClassName == "i-up"){			
+		$(this).children().removeClass("i-up");
+		$(".more-list").hide();
+	}
+})
+$("#importanceQueryHid").val("");
+$(".cc-list li").click(function(){
+	if($(this).hasClass("li-on")){
+		$(this).removeClass("li-on")
+	}else{	
+		$(this).addClass("li-on");
+	}
+	$("#importanceQueryHid").val("");
+    $(".cc-list li").each(function(){
+	  var trta = $(this).attr("ta");
+		if($(this).hasClass("li-on")){
+			$("#importanceQueryHid").val("yes");
+			$(".finaanceDataTr_"+trta).attr("tb","1");
+		}else{	
+			$(".finaanceDataTr_"+trta).attr("tb","0");
+		}
+    });
+    forShow();
+})
+$("#quxBtn").click(function(){
+	$(".cc-list li").removeClass("li-on")
+})
+
+$("#currencyTypeHid").val("");
+
+$("#currencyTypeQuery li").click(function(){
+	$(this).addClass("all-font-s");
+    var currency = $(this).attr("livalue");
+    $("#currencyTypeQuery li i").each(function(){
+	   $(this).addClass("no-selection").removeClass("selected");
+    });
+    $(".imimportance").attr("tc","0");
+	if("&#27431;&#20803;&#21306;"==currency){
+		$(".finaanceDataTr_&#27861;&#22269;").attr("tc","1");
+		$(".finaanceDataTr_&#24503;&#22269;").attr("tc","1");
+		$(".finaanceDataTr_&#24847;&#22823;&#21033;").attr("tc","1");
+    }
+    $(".finaanceDataTr_"+currency).attr("tc","1");
+    $("#currencyTypeHid").val(currency);
+	$(this).children('i').removeClass("no-selection").addClass("selected");
+	forShow();
+});
+
+function forShow(){
+    $(".imimportance").each(function(){
+    	//var currencyTypeHid = $("#currencyTypeHid").val();
+  	 //console.log("currencyTypeHid--"+$("#currencyTypeHid").val());
+  	  if(("1"==$(this).attr("tc") || "&#25152;&#26377;" == $("#currencyTypeHid").val()) && ("1"==$(this).attr("tb") || "" == $("#importanceQueryHid").val())){
+  		  $(this).show();
+  	  }else{
+  		  $(this).hide();
+  	  }
+     });
+}
+
+</script>
+
+
+</html>

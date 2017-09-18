@@ -1,0 +1,112 @@
+
+<!DOCTYPE html>
+<html>
+   <head>
+      <title>Bootstrap 模板</title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <!-- 引入 Bootstrap -->
+      <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+      <link rel="stylesheet" href="/css/bootstrap-table.css">
+ 
+      <!-- HTML5 Shim 和 Respond.js 用于让 IE8 支持 HTML5元素和媒体查询 -->
+      <!-- 注意： 如果通过 file://  引入 Respond.js 文件，则该文件无法起效果 -->
+      <!--[if lt IE 9]>
+         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+         <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+      <![endif]-->
+   </head>
+   <body>
+      <h1>Hello, world!</h1>
+      
+      <table id="test-table" class="col-xs-12" data-toolbar="#toolbar"></table>
+      
+      <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            initTable();
+
+        });
+
+        function initTable() {
+            $('#test-table').bootstrapTable({
+                method: 'post',
+                toolbar: '#toolbar',    //工具按钮用哪个容器
+                striped: true,      //是否显示行间隔色
+                cache: false,      //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: true,     //是否显示分页（*）
+                sortable: true,      //是否启用排序
+                sortOrder: "ID asc",     //排序方式
+                pageNumber: 1,      //初始化加载第一页，默认第一页
+                pageSize: 12,      //每页的记录行数（*）
+                pageList: [20, 50, 100, 150],  //可供选择的每页的行数（*）
+                url: "/index/index",//这个接口需要处理bootstrap table传递的固定参数
+                queryParamsType: '', //默认值为 'limit' ,在默认情况下 传给服务端的参数为：offset,limit,sort
+                // 设置为 '' 在这种情况下传给服务器的参数为：pageSize,pageNumber
+
+                //queryParams: queryParams,//前端调用服务时，会默认传递上边提到的参数，如果需要添加自定义参数，可以自定义一个函数返回请求参数
+                sidePagination: "server",   //分页方式：client客户端分页，server服务端分页（*）
+                //search: true, //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+                strictSearch: true,
+                //showColumns: true, //是否显示所有的列
+                //showRefresh: true, //是否显示刷新按钮
+                minimumCountColumns: 2,    //最少允许的列数
+                clickToSelect: true,    //是否启用点击选中行
+                searchOnEnterKey: true,
+                search:true,
+                columns: [
+                 {
+                    title: "ID",
+                    field: "ID",
+                    align: "center",
+                    valign: "middle",
+                    formatter: function (value, row, index) {
+                        //通过formatter可以自定义列显示的内容
+                        //value：当前field的值，即id
+                        //row：当前行的数据
+                        var a = '<a href="/test/edit?id='+value+'" >修改</a>';
+                        return a;
+                    }
+                },
+                {
+                    title: "Sku",
+                    field: "Sku",
+                    align: "center",
+                    valign: "middle",
+                    sortable:true
+
+                },
+                {
+                    title: "ProductName",
+                    field: "ProductName",
+                    align: "center",
+                    valign: "middle"
+                },
+                {
+                    title: "Price",
+                    field: "Price",
+                    align: "center",
+                    valign: "middle"
+                },
+                    {
+                        title: "Descrtiption",
+                        field: "Descrtiption",
+                        align: "center",
+                        valign: "middle"
+                    }
+
+                ],
+                pagination: true
+            });
+        }
+
+    </script>
+ 
+      <!-- jQuery (Bootstrap 的 JavaScript 插件需要引入 jQuery) -->
+      <script src="https://code.jquery.com/jquery.js"></script>
+      <!-- 包括所有已编译的插件 -->
+      <script src="/js/bootstrap.min.js"></script>
+      <script src="/js/bootstrap-table.js"></script>
+      <script src="/js/bootstrap-table-zh-CN.js"></script>
+   </body>
+</html>

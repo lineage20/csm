@@ -1,0 +1,250 @@
+			<?php
+			$cates_arr = $this->objToArray->ohYeah(Category::find("division_id='{$division_id}'"));
+			$items = $this->tree->_tree($cates_arr, $parent_id = 0, $level = 0);
+			
+			$cates_arr_select = $this->objToArray->ohYeah(Category::find("division_id='{$division_id}' AND visibility != 'Hidden' "));
+			$items_select = $this->tree->_tree($cates_arr_select, $parent_id = 0, $level = 0);
+			
+			if(!isset($isPartView)):?>
+			<ul class="breadcrumb">
+				<li>
+					<i class="icon-home"></i>
+					<a href="/">Home</a> 
+					<i class="icon-angle-right"></i>
+				</li>
+				<li><a href="#">模板管理</a><i class="icon-angle-right"></i></li>
+				<li><a href="#">分类关联列表</a></li>
+				<li>
+			</ul>
+			<div class="row-fluid sortable">		
+				<div class="box span12">
+					<div class="box-header" data-original-title>
+						<h2><i class="halflings-icon align-justify"></i><span class="break"></span>分类关联列表</h2>
+						<div class="box-icon">
+							<a href="#" class="btn-setting"><i class="halflings-icon wrench"></i></a>
+							<a href="#" class="btn-minimize"><i class="halflings-icon chevron-up"></i></a>
+							<a href="#" class="btn-close"><i class="halflings-icon remove"></i></a>
+						</div>
+					</div>
+					<div class="box-content">
+						<div class="row-fluid">
+							 
+							<div class="span11">
+							<?php echo \Phalcon\Tag::form(array("", "method" => "post",'class'=>'form-horizontal')); ?>
+								<div class="dataTables_filter">
+                       			     分类：<select id="category_id" name="category_id"><?php 
+                                   foreach ($items_select as $vs):?>
+                                        <option value="<?php echo $vs['id'];?>"
+                                        <?php echo (isset($info->category_id) && $info->category_id==$vs['id']) ? 'selected' : '' ?>>
+                                             <?php echo str_repeat("&nbsp;&nbsp;&nbsp;&nbsp;",$vs['level']);?>
+                                                 <?php echo $vs['name'];?>
+                                              </option>
+                                            <?php endforeach?>
+                                </select>
+                                	<?php 
+                                	/**
+                                	echo '模板：';
+                                	echo \Phalcon\Tag::selectStatic(array(
+                                			"template_id",
+                                			Template::find('status= \'Enabled\''),
+                                			"using" => array("id", "name"),
+                                			"value"=>'',
+                                			"id"=>'template_id',
+											'class'=>'span2'
+                                	));
+                                	**/
+                                	 echo \Phalcon\Tag::submitButton(array("查询",'class'=>'btn btn-small btn-primary')) ?>
+								</div>
+							</div>
+							<?php echo \Phalcon\Tag::endForm()?>
+							
+							
+						</div>
+						<?php endif ;?>
+						<table class="table table-striped table-bordered bootstrap-datatable datatable">
+						  <thead>
+							  <tr>
+			
+								  <th width="16%">分类</th>
+								  <th width="16%">模板</th>
+								  <th width="16%">操作</th>
+							  </tr>
+						  </thead>   
+						  <tbody>
+						  <?php foreach ($items as $item):?>
+						    <?php if(isset($list[$item['id']])): ?>
+						    <?php foreach($list[$item['id']] as $k=>$info) :?>
+							<tr>
+								<td><?php if($k==0):?>
+								<?php echo str_repeat("&nbsp;&nbsp;&nbsp;&nbsp;",$item['level']);?>
+                                      <?php if($item['visibility']=='Hidden'):?>
+                                      <span class="label label-error"><?php echo $item['name'];?></span>
+                                      <?php else :?>
+                                      <?php echo $item['name'];?>
+                                      <?php endif ;?>
+                                      
+                                      <?php if($item['status']=='Disabled'):?>
+                                      <!--  <span class="label label-error">非启用</span>-->
+                                      <?php endif ;?>
+                                      
+                                      <?php endif ;?>
+                                 </td>
+								<td><?php echo $info['tname']?>
+								<span class="label"><?php echo isset($type_name[$info['ttype']]) ? $type_name[$info['ttype']] : $info['ttype'];?></span>
+								<?php if($info['tstatus']=='Disabled'):?>
+                                <span class="label label-error">非启用</span>
+                                <?php endif ;?></td>
+								
+								<td>
+								<?php $type = strtolower($info['ttype']) ;?>
+								<?php if($item['visibility']!='Hidden' && $info['tstatus']=='Enabled'):?>
+									<a title="预览" class="btn btn-success<?php echo  ' go_'.$type?>" data-category_id="<?php echo $info['category_id']?>" data-template_id="<?php echo $info['template_id']?>" target="_blank" href="<?php echo str_replace(array(':url',':category_id',':template_id'),array($frontend_baseUrl,$info['category_id'],$info['template_id']), $urlAll->$type)  ?>">
+										<i class="halflings-icon white zoom-in"></i>  
+									</a>
+									<a title="清空缓存" class="btn btn-info clear_cahce" target="_blank" href="<?php echo str_replace(array(':url',':parent_id',':template_id'),array($frontend_baseUrl,$info['category_id'],$info['template_id']), $urlAll_purge->$type)  ?>">
+										<i class="halflings-icon white refresh"></i>  
+									</a>
+									<?php else:?>
+									
+									<?php endif ;?>
+									<a title="解除关联" class="btn btn-danger deleteAction" href="/template/deleteHasCategory/<?php echo $info['id']?>">
+										<i class="halflings-icon white resize-full"></i> 
+									</a>
+								</td>
+							</tr>
+							<?php endforeach ;?>
+							<?php else:?>
+							<tr>
+								<td> <?php echo str_repeat("&nbsp;&nbsp;&nbsp;&nbsp;",$item['level']);?>
+                                      <?php if($item['visibility']=='Hidden'):?>
+                                      <span class="label label-error"><?php echo $item['name'];?></span>
+                                      <?php else :?>
+                                      <?php echo $item['name'];?>
+                                      <?php endif ;?>
+                                      
+                                      <?php if($item['status']=='Disabled'):?>
+                                      <!--  <span class="label label-error">非启用</span>-->
+                                      <?php endif ;?>
+                                                 
+                                                 </td>
+								<td>--</td>
+								
+								<td>
+									
+								</td>
+							</tr>
+							<?php endif ;?>
+							
+							<?php endforeach;?>
+						</tbody>
+					  </table> 
+					     <?php if(!isset($isPartView)):?>       
+					</div>
+				</div><!--/span-->
+			
+			</div><!--/row-->
+			<?php endif ;?>
+			<script>
+			
+			$(document).ready(function(){
+				$('a.deleteAction').live('click',function(){
+					var href= $(this).attr('href');
+					var deleteSuccess = 0;
+					$.ajax({
+				        type: "POST",
+				        url: href,
+				        data: {'ajax':1},
+				        async:false,
+				        dataType: "json",
+				        success: function(data){
+				        	$('#myModal>.modal-body>p').html(data.msg);
+				        	$('#myModal').modal('show');
+				        	if(!data.status){
+				        		deleteSuccess = 1;
+				        	}
+				        
+				    	}
+				    });
+					if(deleteSuccess==1){
+						$(this).parent().html('');
+						setTimeout("$('#myModal').modal('hide')",600);
+					}
+					return false;
+				});
+				
+				$('.go_detail,.go_video').click(function(){
+					var template_id = $(this).attr('data-template_id');
+					var category_id = $(this).attr('data-category_id');
+					var myclass = $(this).attr('class');
+					var table = myclass.substring(myclass.indexOf('go_')+3);
+					
+					window.go_detail_href = $(this).attr('href');
+					window.template_article_id = 0;
+					
+					$.ajax({
+				        type: "POST",
+				        url: '/template/ajaxarticle',
+				        data: {'ajax':1,'category_id':category_id,'article_id':window.template_article_id,'only_one_id':1,'table':table},
+				        async:false,
+				        success: function(data){
+					        
+					        if(data.replace(/[^0-9]$/g,'') != data){
+					        	$('#myModal>.modal-body>p').html('<div class="span5"><div class="box-content"><div class="row-fluid"><div class="span11">'+data+'<div id="loadding"></div></div></div></div></span>');
+					        	$('#myModal').modal('show');
+					        }else{
+					        	window.template_article_id = data;
+					        }
+				        	
+				    	}
+				    });
+				    
+				    if(window.template_article_id){
+					    var href= window.go_detail_href;
+				    	href = href.replace(':article_id',window.template_article_id);
+				    	$(this).attr('href',href);
+				    	return true;
+				    }
+				    
+					return false;
+				});
+				
+				$('.clear_cahce').click(function(){
+					var url =$(this).attr('href');
+					$.ajax({
+				        type: "POST",
+				        url: '/template/hostnode',
+				        data: {'ajax':1,'url':url},
+				        async:false,
+				        dataType:'json',
+				        success: function(data){
+					        
+				        	$('#myModal>.modal-body>p').html(data.msg);
+							$('#myModal').modal('show');
+							setTimeout("$('#myModal').modal('hide')",600);
+				    	}
+				    });
+				    return false;
+				});
+				
+				
+
+				
+				$('#article_id').live('change',function(){
+					$("#article_id_input").val($(this).val());
+					loadding();
+				});
+				
+				$('#article_id_input').live('blur',function(){
+					loadding();
+				});
+				function loadding(){
+					var  url = window.go_detail_href.replace(':article_id',$("#article_id_input").val());
+					var url_html='<div class="alert alert-success">引用地址 :<a href="'+url+'" target="_blank"><strong>'+url+'</strong></a></div><iframe border="0" vspace="0" hspace="0" marginWidth="0" marginHeight="0" frameSpacing="0" frameBorder="0" scrolling="no" width="100%" height="500px" class="form-horizontal" src="'+url+'">';
+					$('#loadding').html(url_html);
+				}
+				
+				
+			});
+			
+
+			</script>

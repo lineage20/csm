@@ -1,0 +1,265 @@
+
+			<div class="row-fluid sortable">
+				<div class="box span12">
+					<div class="box-header" data-original-title>
+						<h2><i class="halflings-icon edit"></i><span class="break"></span>编辑分类</h2>
+						<div class="box-icon">
+							<a href="#" class="btn-setting"><i class="halflings-icon wrench"></i></a>
+							<a href="#" class="btn-minimize"><i class="halflings-icon chevron-up"></i></a>
+							<a href="#" class="btn-close"><i class="halflings-icon remove"></i></a>
+						</div>
+					</div>
+					<div class="box-content">
+                                            <form class="form-horizontal" method="post" action="/category/editHandle">
+							<fieldset>
+							  
+                                                            <input type="hidden" id="id" name="id" value="<?php echo $cates->id;?>" />
+<!--							  <div class="control-group">
+								<label class="control-label">Uneditable input</label>
+								<div class="controls">
+								  <span class="input-xlarge uneditable-input">Some value here</span>
+								</div>
+							  </div>
+							  <div class="control-group">
+								<label class="control-label" for="disabledInput">Disabled input</label>
+								<div class="controls">
+								  <input class="input-xlarge disabled" id="disabledInput" type="text" placeholder="Disabled input here…" disabled="">
+								</div>
+							  </div>
+							  <div class="control-group">
+								<label class="control-label" for="optionsCheckbox2">Disabled checkbox</label>
+								<div class="controls">
+								  <label class="checkbox">
+									<input type="checkbox" id="optionsCheckbox2" value="option1" disabled="">
+									This is a disabled checkbox
+								  </label>
+								</div>
+							  </div>
+							  <div class="control-group warning">
+								<label class="control-label" for="inputWarning">Input with warning</label>
+								<div class="controls">
+								  <input type="text" id="inputWarning">
+								  <span class="help-inline">Something may have gone wrong</span>
+								</div>
+							  </div>
+							  <div class="control-group error">
+								<label class="control-label" for="inputError">Input with error</label>
+								<div class="controls">
+								  <input type="text" id="inputError">
+								  <span class="help-inline">Please correct the error</span>
+								</div>
+							  </div>
+							  <div class="control-group success">
+								<label class="control-label" for="inputSuccess">Input with success</label>
+								<div class="controls">
+								  <input type="text" id="inputSuccess">
+								  <span class="help-inline">Woohoo!</span>
+								</div>
+							  </div>-->
+							  <div class="control-group">
+								<label class="control-label" for="selectError3">隶属分类</label>
+								<div class="controls">
+                                                                    <select id="parent_id" name="parent_id">
+                                                                        <?php 
+                                                                                $cates_arr = $this->objToArray->ohYeah($pages);
+                                                                                $items = $this->tree->_tree($cates_arr, $parent_id = 0, $level = 0);
+                                                                                if($cates->parent_id == null){
+                                                                                    echo "<option value='$cates->id'>{$cates->name}</option>";
+                                                                                }else{
+                                                                                foreach ($items as $vs){?>
+                                                                        <option <?php echo ($cates->parent_id==$vs['id']?'selected="selected"':'');?> value="<?php echo $vs['id'];?>">
+                                                                                    <?php echo str_repeat("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;",$vs['level']);?>
+                                                                                    <?php echo $vs['name'];?>
+                                                                                </option>
+                                                                                <?php }}?>
+								  </select>
+								</div>
+							  </div>
+                                                          <div class="control-group">
+								<label class="control-label" for="focusedInput">分类名称</label>
+								<div class="controls">
+                                                                    <input class="input-xlarge focused" id="name" name="name" type="text" value="<?php echo $cates->name;?>">
+								</div>
+							  </div>
+                                                          <div class="control-group">
+								<label class="control-label" for="selectError3">语言</label>
+								<div class="controls">
+                                                                    <input class="input-xlarge focused" id="language" name="language" type="text" readonly="readonly" value="<?php  if($cates->language == 'cn'){
+                                                                        echo '简体';
+                                                                    }elseif($cates->language == 'tw'){
+                                                                        echo '繁体';
+                                                                    }else{
+                                                                        echo '英语';
+                                                                    }?>">
+								</div>
+							  </div>
+                                                          <div class="control-group">
+								<label class="control-label" for="selectError3">可见性</label>
+								<div class="controls">
+                                                                    <select id="visibility" name="visibility">
+                                                                        
+                                                                        <option <?php echo ($cates->visibility=='Visible'?'selected="selected"':'');?> value="Visible">显示</option>
+                                                                        <option <?php echo ($cates->visibility=='Hidden'?'selected="selected"':'');?> value="Hidden">隐藏</option>
+                                                                        
+								  </select>
+								</div>
+							  </div>
+                                                          <div class="control-group">
+								<label class="control-label" for="selectError3">分类描述</label>
+								<div class="controls">
+                                                                    <textarea id="description" name="description"><?php echo $cates->description;?></textarea>
+								</div>
+							  </div>
+<!--							  <div class="control-group">
+								<label class="control-label" for="selectError">Modern Select</label>
+								<div class="controls">
+								  <select id="selectError" data-rel="chosen">
+									<option>Option 1</option>
+									<option>Option 2</option>
+									<option>Option 3</option>
+									<option>Option 4</option>
+									<option>Option 5</option>
+								  </select>
+								</div>
+							  </div>
+							  <div class="control-group">
+								<label class="control-label" for="selectError1">Multiple Select / Tags</label>
+								<div class="controls">
+								  <select id="selectError1" multiple data-rel="chosen">
+									<option>Option 1</option>
+									<option selected>Option 2</option>
+									<option>Option 3</option>
+									<option>Option 4</option>
+									<option>Option 5</option>
+								  </select>
+								</div>
+							  </div>
+							  <div class="control-group">
+								<label class="control-label" for="selectError2">Group Select</label>
+								<div class="controls">
+									<select data-placeholder="Your Favorite Football Team" id="selectError2" data-rel="chosen">
+										<option value=""></option>
+										<optgroup label="NFC EAST">
+										  <option>Dallas Cowboys</option>
+										  <option>New York Giants</option>
+										  <option>Philadelphia Eagles</option>
+										  <option>Washington Redskins</option>
+										</optgroup>
+										<optgroup label="NFC NORTH">
+										  <option>Chicago Bears</option>
+										  <option>Detroit Lions</option>
+										  <option>Green Bay Packers</option>
+										  <option>Minnesota Vikings</option>
+										</optgroup>
+										<optgroup label="NFC SOUTH">
+										  <option>Atlanta Falcons</option>
+										  <option>Carolina Panthers</option>
+										  <option>New Orleans Saints</option>
+										  <option>Tampa Bay Buccaneers</option>
+										</optgroup>
+										<optgroup label="NFC WEST">
+										  <option>Arizona Cardinals</option>
+										  <option>St. Louis Rams</option>
+										  <option>San Francisco 49ers</option>
+										  <option>Seattle Seahawks</option>
+										</optgroup>
+										<optgroup label="AFC EAST">
+										  <option>Buffalo Dennis Jis</option>
+										  <option>Miami Dolphins</option>
+										  <option>New England Patriots</option>
+										  <option>New York Jets</option>
+										</optgroup>
+										<optgroup label="AFC NORTH">
+										  <option>Baltimore Ravens</option>
+										  <option>Cincinnati Bengals</option>
+										  <option>Cleveland Browns</option>
+										  <option>Pittsburgh Steelers</option>
+										</optgroup>
+										<optgroup label="AFC SOUTH">
+										  <option>Houston Texans</option>
+										  <option>Indianapolis Colts</option>
+										  <option>Jacksonville Jaguars</option>
+										  <option>Tennessee Titans</option>
+										</optgroup>
+										<optgroup label="AFC WEST">
+										  <option>Denver Broncos</option>
+										  <option>Kansas City Chiefs</option>
+										  <option>Oakland Raiders</option>
+										  <option>San Diego Chargers</option>
+										</optgroup>
+								  </select>
+								</div>
+							  </div>-->
+							  <div class="form-actions">
+                                                              <button id="submit" type="button" class="btn btn-primary">修改</button>
+								<button class="btn" type="submit" id="setoff" name="setoff" value="setoff">取消</button>
+							  </div>
+							</fieldset>
+						  </form>
+					
+					</div>
+				</div><!--/span-->
+			
+			</div><!--/row-->
+<script language="javascript" type="text/javascript">
+    
+
+$(function(){
+    $("#submit").click(function(){
+        var name = $('#name').val();
+        if(!name){
+                $('#myModal>.modal-body>p').html('分类名称不能为空');
+                $('#myModal').modal('show');
+                return false;
+        }
+        if ($.trim(name) == "") {
+             $('#myModal>.modal-body>p').html('分类名称不能为空格');
+             $('#myModal').modal('show');
+            return false;
+        }
+        if(name.length > 10){
+            $('#myModal>.modal-body>p').html('分类名称长度不能超过10');
+            $('#myModal').modal('show');
+            return false;
+        }
+        var id = $("#id").val();
+        var name = $("#name").val();
+        var visibility = $("#visibility").val();
+        var language = $("#language").val();
+        var parent_id = $("#parent_id").val();
+        var description = $("#description").val();
+        $.post('/category/editHandle',{id:id,name:name,visibility:visibility,language:language,parent_id:parent_id,description:description},function(data){
+            
+                $('#myModal>.modal-body>p').html(data.msg);
+                $('#myModal').modal('show');
+                if(!data.status){
+//                    location.href='/category/index';
+//                    return false;
+//                        $('#myModal>.modal-body>p').append(data.msg);
+                        
+                        window.template_jump = setInterval("location.href='/category/index'",600);
+                }
+            },'json');
+        });
+        $('#nojump').live('click',function(){
+                if(window.template_jump){
+                         clearInterval(window.template_jump);
+                         $('#myModal').modal('hide');
+                }
+                return false;
+        });
+    });
+    function jumpsec(){
+        var sec = $('#jumpsec').html();
+        sec = parseInt(sec);
+        if(sec>1){
+                sec = sec-1;
+                $('#jumpsec').html(sec);
+        }else{
+                location.href='/category/index';
+        }
+    }
+
+
+</script>				
+

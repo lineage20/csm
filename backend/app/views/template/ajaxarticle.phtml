@@ -1,0 +1,62 @@
+<?php 
+$sub_ids = array();
+Category::getSubIds($category_id,$sub_ids);
+$wehe_category = " AND division_category_id='{$category_id}'";
+#$wehe_category = " AND division_category_id IN ('".implode("','", $sub_ids)."')";
+$table_up = ucfirst($table);
+$table_name = isset($type_name[$table_up]) ? $type_name[$table_up] : $table_up;
+if($only_one_id){
+	switch ($table){
+		case 'detail':
+			
+			$item = Article::findFirst(array("visibility='Visible' AND division_id='{$division_id}'{$wehe_category}",'order'=>'id DESC'));
+			break;
+		case 'video':
+			$wehe_category = " AND category_id='{$category_id}'";
+			$item = Video::findFirst(array("visibility='Visible' AND division_id='{$division_id}'{$wehe_category}",'order'=>'id DESC'));
+			
+			break;
+	}
+	
+	echo isset($item->id) ? $item->id : '该分类没有'.$table_name;
+	exit();
+}
+
+echo $table_name.'ID:';
+echo \Phalcon\Tag::textField(array("article_id_input", "class" => "span2 typeahead" , "value"=>$article_id,'onkeyup'=>"value=value.replace(/[^0-9]/g,'')")) ?>
+选择<?php echo $table_name?>：
+<?php 
+
+if($table == 'video'){
+	$wehe_category = " AND category_id='{$category_id}'";
+	echo \Phalcon\Tag::selectStatic(array(
+		"article_id",
+		 Video::find(array("visibility='Visible' AND division_id='{$division_id}'{$wehe_category}",'limit'=>20,'order'=>'id DESC')),
+		"using" => array("id", "title"),
+		"value"=>'',
+		'useEmpty' => true,
+		'emptyText' => '--',
+		'emptyValue' => '',
+		"class"=>'span2'
+	));
+
+}else{
+
+	echo \Phalcon\Tag::selectStatic(array(
+		"article_id",
+		Article::find(array("visibility='Visible' AND division_id='{$division_id}'{$wehe_category}",'limit'=>20,'order'=>'id DESC')),
+		"using" => array("id", "title"),
+		"value"=>'',
+		'useEmpty' => true,
+		'emptyText' => '--',
+		'emptyValue' => '',
+		"class"=>'span2'
+));
+}
+
+
+
+
+
+
+?>

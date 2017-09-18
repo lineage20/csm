@@ -1,0 +1,5 @@
+/.buildpath
+/.project
+/.settings
+/backend/app/logs/*.log
+/backend/app/logs/debug.log

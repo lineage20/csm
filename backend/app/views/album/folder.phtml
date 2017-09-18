@@ -1,0 +1,100 @@
+<script type="text/javascript">
+
+
+</script>
+<div class="row-fluid sortable">		
+    <div class="box span12">
+        <div class="box-header" data-original-title>
+            <h2><i class="halflings-icon user"></i><span class="break"></span><?php ?></h2>
+            <div class="box-icon">
+                <a href="#" class="btn-setting"><i class="halflings-icon wrench"></i></a>
+                <a href="#" class="btn-minimize"><i class="halflings-icon chevron-up"></i></a>
+                <a href="#" class="btn-close"><i class="halflings-icon remove"></i></a>
+            </div>
+        </div>
+        
+        <div class="box-content">
+            <div class="row-fluid">
+							<div class="">
+								<div class="" id="" style="float:left">
+									<a href="/album/upload"><input  type="button" value="上传图片" class="btn btn-primary btn-search" /></a>
+								</div>
+                                                            <div style="float:left;margin-left: 30px;"><a href="/album/add" ><input  type="button" value="创建文件夹" class="btn btn-primary btn-search" /></a></div>
+							</div>
+						</div>
+           
+            
+            <table class="table table-striped table-bordered bootstrap-datatable datatable" style="margin-top: 30px;">  
+                
+                <div style="margin-top: 20px;">    
+                        <?php 
+   
+                    $album = isset($folder) ? $this->objToArray->ohYeah($folder) : array();
+                    $db = $this->mongodb->db;
+                    
+                    foreach($page->items as $vs){
+                        $grid = $db->getGridFS($vs->folder);
+                    $image = $grid->find()->limit(1);
+                    $pictures_arr = $this->objToArray->ohYeah($image);
+                    if($pictures_arr){
+                        foreach ($pictures_arr as $doc) {
+                                $doc_arr = $this->objToArray->ohYeah($doc);
+                                $doc_arr['filename'] = isset($doc_arr['file']['filename']) ? $doc_arr['file']['filename'] : '';
+                               
+                            }
+                    }else{
+                        $doc_arr['filename'] = '';
+                    }
+                    
+//                             print_r($pictures_arr);
+//                            var_dump($pictures_arr)      ;die;
+                            
+                        ?>
+                    <div style="float: left;width: 200px;margin-left: 22px;margin-top: 22px;"><a href="/album/browse/<?php echo $vs->folder;?>"><img src="
+                      <?php 
+                   
+                    
+                    if($doc_arr['filename'] == ''){
+                        echo $this->imagesUri.'/img/album/pic-none.png';
+                    }else{
+                        echo $this->imagesUri.'/image/raw/'.$vs->folder.'/'.$doc_arr['filename'];
+                    }?>                                                                                                                               
+                                                                                                                                                     
+                    " /></a></div>
+                         <?php }?>
+                   
+                </div>
+            </table>   
+            <div class="row-fluid">
+                    <div class="span12 center">
+                            <div class="dataTables_paginate paging_bootstrap pagination">
+                                    <span class="page_text">共有 <?php echo $page->total_items;?> 条记录, 每页显示 <?php echo $page->limit;?> 条, 当前<?php echo $page->current;?>/<?php echo ($page->total_pages==0?1:$page->total_pages);?> 页:</span>
+                                    <ul>
+                                            <li class="prev"><a href="/album/folder">首页</a></li>
+                                            <li class="prev"><a href="/album/folder/<?php echo $page->before;?>">上一页</a></li>
+                                            <li class="next"><a href="/album/folder/<?php echo $page->next;?>">下一页</a></li>
+                                            <li class=""><a href="/album/folder/<?php echo $page->last;?>">尾页</a></li>
+                                    </ul>
+<!--                                    <span class="page_text">每页行数:</span>
+                                    <select name="pagesize" style="width:auto;" class="pagesize" onchange="location.href='/article/list/1/'+this.value;">
+                                          <option value="10"<?php if($page->pageSize==10):?> selected="selected"<?php endif;?>>10</option>
+                                          <option value="25"<?php if($page->pageSize==25):?> selected="selected"<?php endif;?>>25</option>
+                                          <option value="50"<?php if($page->pageSize==50):?> selected="selected"<?php endif;?>>50</option>
+                                          <option value="100"<?php if($page->pageSize==100):?> selected="selected"<?php endif;?>>100</option>
+                                  </select> 
+                                  <span class="page_text"> 条</span>-->
+                            </div>
+                    </div>
+            </div> 
+        </div>
+    </div><!--/span-->
+
+</div><!--/row-->
+<script language="javascript" type="text/javascript">
+   
+</script>
+
+
+
+
+

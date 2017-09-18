@@ -1,0 +1,34 @@
+<?php 
+$selectSetting = $relation == 0 ? array(
+					"template_id[]",
+					$list[0],
+					"using" => array("id", "name"),
+					"value"=>'',
+					"id"=>'template_id',
+					"multiple"=>'multiple',
+					"data-rel"=>'chosen'
+			) : array(
+					"template_id",
+					$list,
+					"using" => array("id", "name"),
+					"value"=>''
+					);
+?>
+<?php if($relation==0) :?>
+<?php echo \Phalcon\Tag::selectStatic($selectSetting);?>
+<script src="/js/jquery.chosen.min.js"></script>
+<script>
+$('[data-rel="chosen"],[rel="chosen"]').chosen();
+</script>
+<?php endif ;?>
+
+<?php if($relation == 1) :
+?>
+模板 :<select id="template_id" name="template_id" class='span2'>
+	<option value=''>--</option>
+	<?php foreach($list[1] as $k=>$v):?>
+	<option value="<?php echo $v['id'] ?>" data-type="<?php echo $v['type'] ?>"><?php echo $v['name'] ?></option>
+	<?php endforeach?>
+</select>
+<?php endif;?>
+					

@@ -1,0 +1,273 @@
+			<ul class="breadcrumb">
+				<li>
+					<i class="icon-home"></i>
+					<a href="/">Home</a>
+					<i class="icon-angle-right"></i>
+				</li>
+				<li>
+					<i class="icon-edit"></i>
+					<a href="#">编辑文章</a>
+				</li>
+			</ul>
+
+			<div class="row-fluid sortable">
+				<div class="box span12">
+					<div class="box-header" data-original-title>
+						<h2><i class="halflings-icon edit"></i><span class="break"></span>新增文章</h2>
+						<div class="box-icon">
+							<a href="#" class="btn-setting"><i class="halflings-icon wrench"></i></a>
+							<a href="#" class="btn-minimize"><i class="halflings-icon chevron-up"></i></a>
+							<a href="#" class="btn-close"><i class="halflings-icon remove"></i></a>
+						</div>
+					</div>
+					<?php if(isset($errorMessage)):?>
+					<div class="box-content alerts">
+						<div class="alert alert-error">
+							<button type="button" class="close" data-dismiss="alert">×</button>
+							<?php foreach($errorMessage as $message):?>
+							<strong><?php echo $message;?></strong><br />
+							<?php endforeach;?>
+						</div>
+					</div>
+					<?php endif;?>
+					<div class="box-content">
+						<form class="form-horizontal" method="post" action="" name="createForm" id="createForm" enctype="multipart/form-data">
+						  <fieldset>
+							<div class="control-group">
+							  <label class="control-label" for="title">文章标题 </label>
+							  <div class="controls">
+								<input type="text" class="span6 typeahead" id="title" name="title" value="" />
+								<span id="title_msg" class="help-inline"></span>
+							  </div>
+							</div>
+							<div class="control-group">
+							  <label class="control-label" for="language">语言 </label>
+							  <div class="controls">
+								<select name="language" id="language">
+									<!--option value="">请选择</option>
+									<option value="cn">CN</option>
+									<option value="tw">TW</option>
+									<option value="en">EN</option-->
+									<?php foreach($language as $k => $v):?>
+									<option value="<?php echo $k;?>"><?php echo $v;?></option>
+									<?php endforeach;?>
+								</select>
+								<span id="language_msg" class="help-inline"></span>
+							  </div>
+							</div>
+							<div class="control-group">
+							  <label class="control-label" for="category_id">分类 </label>
+							  <div class="controls">
+								<select name="division_category_id" id="division_category_id">
+									<option value="">请选择</option>
+									<?php
+				                    $cates_arr = $this->objToArray->ohYeah($divisionCategory);
+				                    $items = $this->tree->_tree($cates_arr, $parent_id = 0, $level = 0);
+				                    foreach ($items as $vs) :
+				                        ?>
+									<option value="<?php echo $vs['id'];?>"<?php if($vs['id']==$cateId):?> selected="selected"<?php endif;?>>
+									<?php echo str_repeat("&nbsp;&nbsp;&nbsp;&nbsp;", $vs['level']); ?>
+    								<?php echo $vs['name']; ?>
+    								</option>
+									<?php endforeach;?>
+								</select>
+								<span id="division_category_id_msg" class="help-inline"></span>
+							  </div>
+							</div>
+							<div class="control-group">
+							  <label class="control-label" for="tag">子类型 </label>
+							  <div class="controls">
+								<select name="tag" id="tag">
+									<option value="gold">贵金属分析</option>
+									<option value="oil">原油分析</option>
+									<option value="stock">股指分析</option>
+                                                                        <option value="forex">外汇分析</option>
+									<option value="other">其他分析</option>
+								</select>
+							  </div>
+                                                          </div>
+
+							<div class="control-group">
+							  <label class="control-label" for="image">图片</label>
+							  <div class="controls">
+								<input class="input-file uniform_on" id="image" name="image" type="file" />
+								<input type="hidden" name="hdimage" value="" />
+							  </div>
+							</div>
+							<div class="control-group">
+								<label class="control-label">可见性</label>
+								<div class="controls">
+								  <label class="radio" style="display:inline-block;width:100px;">
+									<input name="visibility" type="radio" value="Visible" /> 显示
+								  </label>
+								  <!--div style="clear:both"></div-->
+								  <label class="radio" style="display:inline-block;width:100px;">
+									<input name="visibility" type="radio" value="Hidden" checked="checked" /> 隐藏
+								  </label>
+								  <span id="visibility_msg" class="help-inline"></span>
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label">分享</label>
+								<div class="controls">
+								  <label class="radio" style="display:inline-block;width:100px;">
+									<input name="share" type="radio" value="Y" /> 是
+								  </label>
+								  <!--div style="clear:both"></div-->
+								  <label class="radio" style="display:inline-block;width:100px;">
+									<input name="share" type="radio" value="N" checked="checked" /> 否
+								  </label>
+								  <span id="share_msg" class="help-inline"></span>
+								</div>
+							</div>
+							<!--div class="control-group">
+								<label class="control-label">状态</label>
+								<div class="controls">
+								  <label class="radio">
+									<input name="status" type="radio" value="Hidden" /> 隐藏
+								  </label>
+								  <div style="clear:both"></div>
+								  <label class="radio">
+									<input name="status" type="radio" value="Disabled" /> 无效
+								  </label>
+								  <div style="clear:both"></div>
+								  <label class="radio">
+									<input name="status" type="radio" value="Enabled" /> 有效
+								  </label>
+								</div>
+							</div-->
+
+							<div class="control-group hidden-phone">
+							  <label class="control-label" for="content">文章内容</label>
+							  <div class="controls">
+								<textarea class="cleditor" id="content" name="content" rows="8" style="width:100%;height:500px;"></textarea>
+								<span id="content_msg" class="help-inline"></span>
+							  </div>
+							</div>
+							<div class="control-group hidden-phone">
+							  <label class="control-label" for="keyword">关键字SEO</label>
+							  <div class="controls">
+								<input type="text" class="span6" id="keyword" name="keyword" value="" />
+							  </div>
+							</div>
+							<div class="control-group hidden-phone">
+							  <label class="control-label" for="description">描述SEO</label>
+							  <div class="controls">
+								<input type="text" class="span6" id="description" name="description" value="" />
+							  </div>
+							</div>
+							<div class="control-group hidden-phone">
+							  <label class="control-label" for="author">作者</label>
+							  <div class="controls">
+								<input type="text" class="input-xlarge" id="author" name="author" value="" />
+							  </div>
+							</div>
+							<div class="form-actions">
+							  <button id="submit" type="submit" class="btn btn-primary">确定</button>
+							  <input type="button" value="取消" class="btn" id="reset" />
+							  <button type="reset" class="btn" style="display:none;">取消</button>
+							</div>
+						  </fieldset>
+						</form>
+
+					</div>
+				</div><!--/span-->
+
+			</div><!--/row-->
+			<script type="text/javascript">
+				var editor;
+				KindEditor.ready(function(K) {
+					editor = K.create('textarea[name="content"]', {
+						cssPath : '/css/editor/code/prettify.css',
+						/*uploadJson : '/album/upload',/*/uploadJson : '/editor/upload',
+						/*fileManagerJson : '/album/folder',/*/fileManagerJson : '/editor/fileManager',
+						allowFileManager : true,
+						afterCreate : function() {
+							var self = this;
+							K.ctrl(document, 13, function() {
+								self.sync();
+								K('form[name=createForm]')[0].submit();
+							});
+							K.ctrl(self.edit.doc, 13, function() {
+								self.sync();
+								K('form[name=createForm]')[0].submit();
+							});
+						}
+					});
+				});
+				$(document).ready(function(){
+					$('#createForm').submit(function(){
+						var error_count = 0;
+						if($.trim($('#title').val())==''){
+							error_count++;
+							$('#title').parent().parent().addClass('error');
+							$('#title_msg').text('标题不能为空');
+						}
+						else{
+							$('#title').parent().parent().removeClass('error');
+							$('#title_msg').text('');
+						}
+						if($('#language').val()==''){
+							error_count++;
+							$('#language').parent().parent().addClass('error');
+							$('#language_msg').text('请选择语言');
+						}
+						else{
+							$('#language').parent().parent().removeClass('error');
+							$('#language_msg').text('');
+						}
+						if($('#division_category_id').val()==''){
+							error_count++;
+							$('#division_category_id').parent().parent().addClass('error');
+							$('#division_category_id_msg').text('请选择分类');
+						}
+						else{
+							$('#division_category_id').parent().parent().removeClass('error');
+							$('#division_category_id_msg').text('');
+						}
+						if($('input[name="visibility"]:checked').val()==null){
+							error_count++;
+							$('#visibility_msg').parent().parent().addClass('error');
+							$('#visibility_msg').text('请选择是否可见');
+						}
+						else{
+							$('#visibility_msg').parent().parent().removeClass('error');
+							$('#visibility_msg').text('');
+						}
+						if($('input[name="share"]:checked').val()==null){
+							error_count++;
+							$('#share_msg').parent().parent().addClass('error');
+							$('#share_msg').text('请选择是否分享');
+						}
+						else{
+							$('#share_msg').parent().parent().removeClass('error');
+							$('#share_msg').text('');
+						}
+						if(editor.text()==''){
+							error_count++;
+							$('#content_msg').parent().parent().addClass('error');
+							$('#content_msg').text('文章内容不能为空');
+						}
+						else{
+							$('#content_msg').parent().parent().removeClass('error');
+							$('#content_msg').text('');
+						}
+						if(error_count>0){
+							$('body,html').animate({scrollTop:0},1000);
+							return false;
+						}
+						return true;
+					});
+					$('#reset').click(function(){
+						$('.filename').text('No file selected');
+						editor.html('');
+						$('input[type="text"],textarea,select').val('');
+					});
+					/*$('input[type="reset"]').click(function(){
+						$('.filename"').text('');
+					});*/
+					<?php if(isset($successMessage)):
+						echo $successMessage;
+					 endif;?>
+				})
+			</script>

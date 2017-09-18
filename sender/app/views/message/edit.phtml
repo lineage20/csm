@@ -1,0 +1,166 @@
+			<ul class="breadcrumb">
+				<li>
+					<i class="icon-home"></i>
+					<a href="/">Home</a>
+					<i class="icon-angle-right"></i> 
+				</li>
+				<li>
+					<i class="icon-edit"></i>
+					<a href="#">编辑内容</a>
+				</li>
+			</ul>
+			
+			<div class="row-fluid sortable">
+				<div class="box span12">
+					<div class="box-header" data-original-title>
+						<h2><i class="halflings-icon edit"></i><span class="break"></span>修改内容</h2>
+						<div class="box-icon">
+							<a href="#" class="btn-setting"><i class="halflings-icon wrench"></i></a>
+							<a href="#" class="btn-minimize"><i class="halflings-icon chevron-up"></i></a>
+							<a href="#" class="btn-close"><i class="halflings-icon remove"></i></a>
+						</div>
+					</div>
+					<?php if(isset($errorMessage)):?>
+					<div class="box-content alerts">
+						<div class="alert alert-error">
+							<button type="button" class="close" data-dismiss="alert">×</button>
+							<?php foreach($errorMessage as $message):?>
+							<strong><?php echo $message;?></strong><br />
+							<?php endforeach;?>
+						</div>
+					</div>
+					<?php endif;?>
+					<div class="box-content">
+						<form class="form-horizontal" method="post" action="" name="editForm" id="editForm" enctype="multipart/form-data">
+						  <fieldset>
+							<div class="control-group">
+							  <label class="control-label" for="typeahead">内容标题 </label>
+							  <div class="controls">
+								<input type="text" class="span6 typeahead" id="title" name="title" value="<?php echo $article->title;?>" />
+								<span id="title_msg" class="help-inline"></span>
+							  </div>
+							</div>
+                                                      
+                                                        <div class="control-group">
+							  <label class="control-label" for="typeahead">类型 </label>
+							  <div class="controls">
+                                                                    <select id="type" name="type">
+                                                                        
+                                                                                <option value="SMS" <?php if(isset($article->type) && $article->type=='SMS'):?> selected="selected"<?php endif;?>>SMS</option>
+                                                                                <option value="Email" <?php if(isset($article->type) && $article->type=='Email'):?> selected="selected"<?php endif;?>>Email</option>
+                                                                        
+								  </select>
+								</div>
+							</div>
+                                                      
+                                                        <div class="control-group">
+							  <label class="control-label" for="typeahead">状态 </label>
+							  <div class="controls">
+                                                                    <select id="status" name="status">
+                                                                        
+                                                                                <option value="Sent" <?php if(isset($article->status) && $article->status=='Sent'):?> selected="selected"<?php endif;?>>Sent</option>
+                                                                                <option value="New" <?php if(isset($article->status) && $article->status=='New'):?> selected="selected"<?php endif;?>>New</option>
+                                                                                <option value="Drafts" <?php if(isset($article->status) && $article->status=='Drafts'):?> selected="selected"<?php endif;?>>Drafts</option>
+                                                                                <option value="Trash" <?php if(isset($article->status) && $article->status=='Trash'):?> selected="selected"<?php endif;?>>Trash</option>
+								  </select>
+								</div>
+							</div>
+                                                        
+							<div class="control-group hidden-phone">
+							  <label class="control-label" for="content">文章内容</label>
+							  <div class="controls">
+								<textarea class="cleditor" id="content" name="content" rows="8" style="width:100%;height:500px;"><?php echo $article->content;?></textarea>
+							  	<span id="content_msg" class="help-inline"></span>
+							  </div>
+							</div>             
+							<div class="form-actions">
+							  <input type="hidden" name="id" value="<?php echo $article->id;?>" />
+                                                          <button id="submit" type="submit" class="btn btn-primary">确定</button>
+							  <input type="button" id="reset" class="btn" value="取消" />
+							</div>
+						  </fieldset>
+						</form>   
+
+					</div>
+				</div><!--/span-->
+
+			</div><!--/row-->
+			<script type="text/javascript">
+				var editor;
+				KindEditor.ready(function(K) {
+					editor = K.create('textarea[name="content"]', {
+						cssPath : '/css/editor/code/prettify.css',
+						uploadJson : '/editor/upload',
+						fileManagerJson : '/editor/fileManager',
+						allowFileManager : true,
+						afterCreate : function() {
+							var self = this;
+							K.ctrl(document, 13, function() {
+								self.sync();
+								K('form[name=editForm]')[0].submit();
+							});
+							K.ctrl(self.edit.doc, 13, function() {
+								self.sync();
+								K('form[name=editForm]')[0].submit();
+							});
+						},
+                                                afterBlur: function(){this.sync();}
+					});
+				});
+				$(document).ready(function(){
+					$.ajaxSetup({async: false});
+					$('#submit').click(function(){
+						var error_count = 0;
+						if($.trim($('#title').val())==''){
+							error_count++;
+							$('#title').parent().parent().addClass('error');
+							$('#title_msg').text('标题不能为空');
+						}
+						else{
+							$('#title').parent().parent().removeClass('error');
+							$('#title_msg').text('');
+						}
+						
+						if(editor.text()==''){
+							error_count++;
+							$('#content_msg').parent().parent().addClass('error');
+							$('#content_msg').text('文章内容不能为空');
+						}
+						else{
+							$('#content_msg').parent().parent().removeClass('error');
+							$('#content_msg').text('');
+						}
+						if(checkIsEdit()){
+							$("#myModal>.modal-body>p").html('你还没修改');
+							$("#myModal").modal("show");
+							return false;
+						}
+						if(error_count>0){
+							$('body,html').animate({scrollTop:0},1000); 
+							return false;
+						}
+//						$('#editForm').submit();
+
+					});
+					$('#reset').click(function(){
+						location.href='/message';
+					});
+					<?php if(isset($successMessage)):
+						echo $successMessage;
+					 endif;?>
+				})
+                                
+				function checkIsEdit(){
+					var flag = false;
+					$.post('/message/isEdit', 
+							$('#editForm').serialize(),
+							function(data){
+//                                                            console.log(data);
+								if(data!=null){
+									flag = data.status;
+								}
+							},
+							'json');
+					return flag;
+				}
+			</script>

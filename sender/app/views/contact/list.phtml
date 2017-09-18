@@ -1,0 +1,116 @@
+<script type="text/javascript">
+
+
+</script>
+<div class="row-fluid sortable">
+    <div class="box span12">
+        <div class="box-header" data-original-title>
+            <h2><i class="halflings-icon user"></i><span class="break"></span><?php ?></h2>
+            <div class="box-icon">
+                <a href="#" class="btn-setting"><i class="halflings-icon wrench"></i></a>
+                <a href="#" class="btn-minimize"><i class="halflings-icon chevron-up"></i></a>
+                <a href="#" class="btn-close"><i class="halflings-icon remove"></i></a>
+            </div>
+        </div>
+
+        <div class="box-content">
+            <div class="row-fluid">
+                <div class="">
+                        <div class="" id="">
+                                <label></label>
+                                <form name="form" action="/contact/list" method="post">
+                                任务：
+                                <select name="group_id" id="group_id" style="width:auto;">
+                                        <option value="">全部</option>
+                                        <?php foreach($groupId as $v):?>
+                                        <option value="<?php echo $v->id;?>"<?php if(isset($where['group_id']) && $where['group_id']==$v->id):?> selected="selected"<?php endif;?>><?php echo $v->name;?></option>
+                                        <?php endforeach;?>
+                                </select>
+                                联系人手机号码:
+                                <input type="text" name="mobile" value="<?php echo isset($where['mobile']) && $where['mobile'] != '' ? $where['mobile'] : '';?>">
+                                联系人邮箱:
+                                <input type="text" name="email" value="<?php echo isset($where['email']) && $where['email'] != '' ? $where['email'] : '';?>">
+                                <input id="submit" type="submit" value="查询" class="btn btn-primary btn-search" />
+                                </form>
+                        </div>
+                </div>
+							<div class="">
+
+                                                            <div style="float:left"><a href="/contact/upload"><input  type="button" value="导入联系人" class="btn btn-primary btn-search" /></a></div>
+							</div>
+						</div>
+            <table class="table table-striped table-bordered bootstrap-datatable datatable">
+                <thead>
+                    <tr>
+
+                        <th>联系人姓名</th>
+                        <th>联系人手机号码</th>
+                        <th>联系人邮箱</th>
+                        <th>备注描述</th>
+                        <th>订阅状态</th>
+                        <th>创建时间</th>
+                        <th>修改时间</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    foreach ($builder as $vs) {
+                        ?>
+                        <tr>
+                            <td ><?php echo $vs->name?></td>
+                            <td ><?php echo $vs->mobile_digest?></td>
+                            <td ><?php echo $vs->email_digest?></td>
+                            <td><?php echo $vs->description; ?></td>
+                            <td ><?php echo $vs->status?></td>
+                            <td><?php echo $vs->ctime; ?></td>
+                            <td ><?php echo $vs->mtime?></td>
+                            <td class="center">
+                                <a title="编辑联系人" class="btn btn-info" href="/contact/edit/<?php echo $vs->id; ?>">
+                                    <i class="halflings-icon white edit"></i>
+                                </a>
+                            </td>
+                        </tr>
+<?php } ?>
+
+                </tbody>
+            </table>
+            <div class="row-fluid">
+                    <div class="span12 center">
+                            <div class="dataTables_paginate paging_bootstrap pagination">
+                                    <span class="page_text">共有 <?php echo $pages['count'];?> 条记录, 每页显示 <?php echo $pages['pageSize'];?> 条, 当前<?php echo $pages['current'];?>/<?php echo $pages['total'];?> 页:</span>
+                                    <ul>
+                                            <li class="prev"><a href="/contact/list">首页</a></li>
+                                            <li class="prev"><a href="/contact/list/<?php echo $pages['before'];?>/<?php echo $pages['pageSize'];?>">← 上一页</a></li>
+                                            <li class="next"><a href="/contact/list/<?php echo $pages['next'];?>/<?php echo $pages['pageSize'];?>">下一页 → </a></li>
+                                            <li class=""><a href="/contact/list/<?php echo $pages['last'];?>/<?php echo $pages['pageSize'];?>">尾页</a></li>
+                                    </ul>
+
+
+                                  <?php echo \Phalcon\Tag::selectStatic(array("pagesize", array('10'=>'10','25' => '25', '50' => '50','100'=>'100'),'class'=>'span1',"value"=>$pages['pageSize'] , "onchange"=>"location.href='/contact/list/1/'+this.value;"));?>
+
+
+                            </div>
+                    </div>
+            </div>
+        </div>
+    </div><!--/span-->
+
+</div><!--/row-->
+<script language="javascript" type="text/javascript">
+    $(function(){
+        $("#language").change(function(){
+            var language = $(this).children('option:selected').val();
+            $('.datatable tbody tr').hide();
+            $('.datatable tbody tr[language="'+language+'"]').show();
+//            $.post('index',{language:language},function(data){
+//                if(!data.status){
+//            },'json');
+        });
+
+      });
+</script>
+
+
+
+
+

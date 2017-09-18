@@ -1,0 +1,149 @@
+
+			<div class="row-fluid sortable">
+				<div class="box span12">
+					<div class="box-header" data-original-title>
+						<h2><i class="halflings-icon edit"></i><span class="break"></span>编辑联系人</h2>
+						<div class="box-icon">
+							<a href="#" class="btn-setting"><i class="halflings-icon wrench"></i></a>
+							<a href="#" class="btn-minimize"><i class="halflings-icon chevron-up"></i></a>
+							<a href="#" class="btn-close"><i class="halflings-icon remove"></i></a>
+						</div>
+					</div>
+					<div class="box-content">
+                                            <form class="form-horizontal" method="post" action="/contact/editHandle">
+							<fieldset>
+                                                            <input type="hidden" id="id" name="id" value="<?php echo $contact[0]['id'];?>" />
+                                                          <div class="control-group">
+								<label class="control-label" for="focusedInput">联系人姓名</label>
+								<div class="controls">
+                                                                    <input class="input-xlarge focused" id="name" name="name" type="text" value="<?php echo $contact[0]['name'];?>">
+								</div>
+							  </div>
+                                                            
+                                                          <div class="control-group">
+								<label class="control-label" for="focusedInput">联系人手机号码</label>
+								<div class="controls">
+                                                                    <input class="input-xlarge focused" id="mobile" name="mobile" type="text" value="<?php echo $contact[0]['mobile'];?>">
+								</div>
+							  </div>
+                                                            
+                                                          <div class="control-group">
+								<label class="control-label" for="focusedInput">联系人邮箱</label>
+								<div class="controls">
+                                                                    <input class="input-xlarge focused" id="email" name="email" type="text" value="<?php echo $contact[0]['email'];?>">
+								</div>
+							  </div>
+                                                            
+                                                          <div class="control-group">
+								<label class="control-label" for="selectError3">订阅状态</label>
+								<div class="controls">
+                                                                    <select id="status" name="status">
+                                                                        
+                                                                        <option <?php echo ($contact[0]['status']=='Subscription'?'selected="selected"':'');?> value="Subscription">订阅</option>
+                                                                        <option <?php echo ($contact[0]['status']=='Unsubscribe'?'selected="selected"':'');?> value="Unsubscribe">退订</option>
+                                                                        
+								  </select>
+								</div>
+							  </div>
+                                                  
+                                                    
+                                                          <div class="control-group">
+								<label class="control-label" for="selectError3">联系人描述</label>
+								<div class="controls">
+                                                                    <textarea id="description" name="description"><?php echo $contact[0]['description'];?></textarea>
+								</div>
+							  </div>
+							  
+							  <div class="form-actions">
+                                                              <button id="submit" type="button" class="btn btn-primary">修改</button>
+								<button class="btn" type="submit" id="setoff" name="setoff" value="setoff">取消</button>
+							  </div>
+							</fieldset>
+						  </form>
+					
+					</div>
+				</div><!--/span-->
+			
+			</div><!--/row-->
+<script language="javascript" type="text/javascript">
+    
+
+$(function(){
+    $("#submit").click(function(){
+        var id = $("#id").val();
+        var name = $("#name").val();
+        var mobile = $('#mobile').val();
+        var email = $('#email').val();
+        var status = $('#status').val();
+        var description = $("#description").val();
+        if(!name){
+                $('#myModal>.modal-body>p').html('联系人姓名不能为空');
+                $('#myModal').modal('show');
+                return false;
+        }
+        if ($.trim(name) == "") {
+             $('#myModal>.modal-body>p').html('联系人姓名不能为空格');
+             $('#myModal').modal('show');
+            return false;
+        }
+        if(name.length > 10){
+            $('#myModal>.modal-body>p').html('联系人姓名长度不能超过10');
+            $('#myModal').modal('show');
+            return false;
+        }
+        if (!email) {
+             $('#myModal>.modal-body>p').html('联系人邮箱不能为空');
+             $('#myModal').modal('show');
+            return false;
+        }
+//        if(!email.match(/^w+((-w+)|(.w+))*@[A-Za-z0-9]+((.|-)[A-Za-z0-9]+)*.[A-Za-z0-9]+$/)){
+//            $('#myModal>.modal-body>p').html('联系人邮箱格式不正确');
+//             $('#myModal').modal('show');
+//            return false;
+//        }
+        if (!mobile) {
+             $('#myModal>.modal-body>p').html('联系人手机号码不能为空');
+             $('#myModal').modal('show');
+            return false;
+        }
+//        if(!mobile.match(/^(((13[0-9]{1})|159|153)+d{8})$/)){
+//            $('#myModal>.modal-body>p').html('联系人手机号码格式不正确');
+//             $('#myModal').modal('show');
+//            return false;
+//        }
+        
+        $.post('/contact/editHandle',{id:id,name:name,mobile:mobile,email:email,status:status,description:description},function(data){
+//            console.log(data);return false;
+                $('#myModal>.modal-body>p').html(data.msg);
+                $('#myModal').modal('show');
+                if(!data.status){
+//                    location.href='/category/index';
+//                    return false;
+//                        $('#myModal>.modal-body>p').append(data.msg);
+                        
+                        window.template_jump = setInterval("location.href='/contact/index'",600);
+                }
+            },'json');
+        });
+        $('#nojump').live('click',function(){
+                if(window.template_jump){
+                         clearInterval(window.template_jump);
+                         $('#myModal').modal('hide');
+                }
+                return false;
+        });
+    });
+    function jumpsec(){
+        var sec = $('#jumpsec').html();
+        sec = parseInt(sec);
+        if(sec>1){
+                sec = sec-1;
+                $('#jumpsec').html(sec);
+        }else{
+                location.href='/group/index';
+        }
+    }
+
+
+</script>				
+

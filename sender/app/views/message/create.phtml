@@ -1,0 +1,137 @@
+			<ul class="breadcrumb">
+				<li>
+					<i class="icon-home"></i>
+					<a href="/">Home</a>
+					<i class="icon-angle-right"></i> 
+				</li>
+				<li>
+					<i class="icon-edit"></i>
+					<a href="#">编辑内容</a>
+				</li>
+			</ul>
+			
+			<div class="row-fluid sortable">
+				<div class="box span12">
+					<div class="box-header" data-original-title>
+						<h2><i class="halflings-icon edit"></i><span class="break"></span>新增内容</h2>
+						<div class="box-icon">
+							<a href="#" class="btn-setting"><i class="halflings-icon wrench"></i></a>
+							<a href="#" class="btn-minimize"><i class="halflings-icon chevron-up"></i></a>
+							<a href="#" class="btn-close"><i class="halflings-icon remove"></i></a>
+						</div>
+					</div>
+					<?php if(isset($errorMessage)):?>
+					<div class="box-content alerts">
+						<div class="alert alert-error">
+							<button type="button" class="close" data-dismiss="alert">×</button>
+							<?php foreach($errorMessage as $message):?>
+							<strong><?php echo $message;?></strong><br />
+							<?php endforeach;?>
+						</div>
+					</div>
+					<?php endif;?>
+					<div class="box-content">
+						<form class="form-horizontal" method="post" action="" name="createForm" id="createForm" enctype="multipart/form-data">
+						  <fieldset>
+							<div class="control-group">
+							  <label class="control-label" for="title">内容标题 </label>
+							  <div class="controls">
+								<input type="text" class="span6 typeahead" id="title" name="title" value="" />
+								<span id="title_msg" class="help-inline"></span>
+							  </div>
+							</div>
+                                                      
+                                                        <div class="control-group">
+							  <label class="control-label" for="typeahead">类型 </label>
+							  <div class="controls">
+                                                                    <select id="type" name="type">
+                                                                        
+                                                                                <option value="SMS">SMS</option>
+                                                                                <option value="Email" selected="selected">Email</option>
+                                                                        
+								  </select>
+								</div>
+							</div>
+ 
+							
+							<div class="control-group hidden-phone">
+							  <label class="control-label" for="content">文章内容</label>
+							  <div class="controls">
+								<textarea class="cleditor" id="content" name="content" rows="8" style="width:100%;height:500px;"></textarea>
+								<span id="content_msg" class="help-inline"></span>
+							  </div>
+							</div>         
+							<div class="form-actions">
+							  <button id="submit" type="submit" class="btn btn-primary">确定</button>
+							  <input type="button" value="取消" class="btn" id="reset" />
+							  <button type="reset" class="btn" style="display:none;">取消</button>
+							</div>
+						  </fieldset>
+						</form>   
+
+					</div>
+				</div><!--/span-->
+
+			</div><!--/row-->
+			<script type="text/javascript">
+				var editor;
+				KindEditor.ready(function(K) {
+					editor = K.create('textarea[name="content"]', {
+						cssPath : '/css/editor/code/prettify.css',
+						uploadJson : '/editor/upload',
+						fileManagerJson : '/editor/fileManager',
+						allowFileManager : true,
+						afterCreate : function() {
+							var self = this;
+							K.ctrl(document, 13, function() {
+								self.sync();
+								K('form[name=createForm]')[0].submit();
+							});
+							K.ctrl(self.edit.doc, 13, function() {
+								self.sync();
+								K('form[name=createForm]')[0].submit();
+							});
+						}
+					});
+				});
+				$(document).ready(function(){
+					$('#createForm').submit(function(){
+						var error_count = 0;
+						if($.trim($('#title').val())==''){
+							error_count++;
+							$('#title').parent().parent().addClass('error');
+							$('#title_msg').text('标题不能为空');
+						}
+						else{
+							$('#title').parent().parent().removeClass('error');
+							$('#title_msg').text('');
+						}
+						
+						if(editor.text()==''){
+							error_count++;
+							$('#content_msg').parent().parent().addClass('error');
+							$('#content_msg').text('文章内容不能为空');
+						}
+						else{
+							$('#content_msg').parent().parent().removeClass('error');
+							$('#content_msg').text('');
+						}
+						if(error_count>0){
+							$('body,html').animate({scrollTop:0},1000); 
+							return false;
+						}
+						return true;
+					});
+					$('#reset').click(function(){
+						$('.filename').text('No file selected');
+						editor.html('');
+						$('input[type="text"],textarea,select').val('');
+					});
+					/*$('input[type="reset"]').click(function(){
+						$('.filename"').text('');
+					});*/
+					<?php if(isset($successMessage)):
+						echo $successMessage;
+					 endif;?>
+				})
+			</script>

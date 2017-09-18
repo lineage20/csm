@@ -1,0 +1,56 @@
+<?php
+return  array (
+    'export' => array (
+            'dbhost' => '{{export.dbhost}}',
+            'dbport' => '{{export.dbport}}',
+            'dbuser' => '{{export.dbuser}}',
+            'dbpass' => '{{export.dbpass}}',
+            'dbname' => '{{export.dbname}}'
+    ),
+    'import' => array (
+            'dbhost' => '{{import.dbhost}}',
+            'dbport' => '{{import.dbport}}',
+            'dbuser' => '{{import.dbuser}}',
+            'dbpass' => '{{import.dbpass}}',
+            'dbname' => '{{import.dbname}}'
+    ),
+     'hxpm' => array(
+            'info_export' => array (
+                    'dbhost' => '{{info.export.dbhost}}',
+                    'dbport' => '{{info.export.dbport}}',
+                    'dbuser' => '{{info.export.dbuser}}',
+                    'dbpass' => '{{info.export.dbpass}}',
+                    'dbname' => '{{info.export.dbname}}'
+            ),
+            'news_export' => array (
+                    'dbhost' => '{{news.export.dbhost}}',
+                    'dbport' => '{{news.export.dbport}}',
+                    'dbuser' => '{{news.export.dbuser}}',
+                    'dbpass' => '{{news.export.dbpass}}',
+                    'dbname' => '{{news.export.dbname}}'
+            ),
+            'import' => array (
+                    'dbhost' => '{{hxpm.import.dbhost}}',
+                    'dbport' => '{{hxpm.import.dbport}}',
+                    'dbuser' => '{{hxpm.import.dbuser}}',
+                    'dbpass' => '{{hxpm.import.dbpass}}',
+                    'dbname' => '{{hxpm.import.dbname}}'
+            )
+    ),
+    'gwpm' => array(
+    		'dbhost' => '{{gwpm.dbhost}}',
+    		'dbport' => '{{gwpm.dbport}}',
+    		'dbuser' => '{{gwpm.dbuser}}',
+    		'dbpass' => '{{gwpm.dbpass}}',
+    		'dbname' => '{{gwpm.dbname}}',
+    ),
+	'cf' => array(
+    		'dbhost' => '{{cf.dbhost}}',
+    		'dbport' => '{{cf.dbport}}',
+    		'dbuser' => '{{cf.dbuser}}',
+    		'dbpass' => '{{cf.dbpass}}',
+    		'dbname' => '{{cf.dbname}}',
+    ),
+);
+?>
+

@@ -1,0 +1,251 @@
+<?php
+		$cates_arr = $this->objToArray->ohYeah(Category::find('division_id='.$division_id));
+		$items = $this->tree->_tree($cates_arr, $parent_id = 0, $level = 0);
+			?>
+			<ul class="breadcrumb">
+				<li>
+					<i class="icon-home"></i>
+					<a href="/">Home</a> 
+					<i class="icon-angle-right"></i>
+				</li>
+				<li><a href="#">清空缓存</a></li>
+				<li>
+			</ul>
+			<?php if(isset($message_info)) :?>
+			<div class="alert alert-<?php echo isset($message_info['success']) ? 'success' : 'error'?>">
+			<button type="button" class="close" data-dismiss="alert">×</button>
+			<?php foreach($message_info as $k=>$v):?>
+			<?php echo $v ?><br />
+			<?php endforeach ;?>
+			</div>
+			<?php endif ;?>
+			<div class="row-fluid sortable">		
+				<div class="box span13">
+					<div class="box-header" data-original-title>
+						<h2><i class="halflings-icon align-justify"></i><span class="break"></span>清空缓存</h2>
+						<div class="box-icon">
+							<a href="/template/index">模板列表</a>
+							<a href="#" class="btn-minimize"><i class="halflings-icon chevron-up"></i></a>
+							<a href="#" class="btn-close"><i class="halflings-icon remove"></i></a>
+						</div>
+					</div>
+					<div class="box-content">
+						<div class="row-fluid">
+							<div class="span11">
+							<?php echo \Phalcon\Tag::form(array("", "method" => "post",'class'=>'form-horizontal')); ?>
+								<div class="dataTables_filter">
+								分类：
+								<select name="category_id" id="category_id">
+								<option value="">请选择</option>
+							  <?php 
+                                   foreach ($items as $vs) :?>
+                                        <option value="<?php echo $vs['id'];?>" 
+                                        <?php echo ($getData['category_id']==$vs['id']) ? 'selected' : '' ?>>
+                                             <?php echo str_repeat("&nbsp;&nbsp;&nbsp;&nbsp;",$vs['level']);?>
+                                                 <?php echo $vs['name'];?>
+                                              </option>
+                                            <?php endforeach;?>
+                                </select>
+                                <span id="ajaxtemplate">
+                                	模板：<?php 
+                                	echo \Phalcon\Tag::selectStatic(array(
+                                			"template_id",
+                                			array(),
+                                			"value"=>$getData['template_id']
+                                	));?>
+                                	
+                                </span>
+                                <span id="ajaxarticle"></span>
+                                <?php echo \Phalcon\Tag::submitButton(array("清空",'class'=>'btn btn-small btn-primary','id'=>'submit')) ?>
+                                <?php //echo \Phalcon\Tag::submitButton(array("清空所有",'class'=>'btn btn-small btn-primary','id'=>'submit-all')) ?>
+                                <!--input type="button" id="submit-all" value="清空所有" class="btn btn-small btn-primary" /-->
+								</div>
+							</div>
+							<?php echo \Phalcon\Tag::endForm()?>
+							
+							
+						</div>
+						<div id="loading" class="loading">
+						
+						
+						</div>
+						
+					  </table> 
+					            
+					</div>
+				</div><!--/span-->
+			
+			</div><!--/row-->
+			
+			<script>
+			$(document).ready(function(){
+				$('#submit').click(function(){
+					
+					var template_id = $('#template_id').val();
+					var category_id = $('#category_id').val();
+					if(!template_id){
+						$('#myModal>.modal-body>p').html('请选择模板');
+						$('#myModal').modal('show');
+						return false;
+					}
+					if(!category_id){
+						$('#myModal>.modal-body>p').html('请选择分类');
+						$('#myModal').modal('show');
+						return false;
+					}
+					
+					var urlAll ='<?php echo json_encode($urlAll);?>';
+					urlAll = $.parseJSON(urlAll);
+					var type = $('#template_id option:selected').attr('data-type');
+					type = type.toLowerCase();
+					window.currtable = type;
+					var url = '';
+					switch(type){
+						case 'category':
+							url = urlAll.category;
+							break;
+						case 'list':
+							url = urlAll.list;
+							break;
+						case 'detail':
+							url = urlAll.detail;
+							window.template_article_id = $('#article_id_input').val();
+							
+							if($('#ajaxarticle').html()==''){
+								getarticle();
+								return false;
+							}else{
+								if(!window.template_article_id){
+									//$('#myModal>.modal-body>p').html('请选择文章');
+									//$('#myModal').modal('show');
+									return false;
+								}
+							}
+							break;
+						case 'video':
+							url = urlAll.video;
+							window.template_article_id = $('#article_id_input').val();
+							
+							if($('#ajaxarticle').html()==''){
+								getarticle();
+								return false;
+							}else{
+								if(!window.template_article_id){
+									//$('#myModal>.modal-body>p').html('请选择文章');
+									//$('#myModal').modal('show');
+									return false;
+								}
+							}
+							break;
+					}
+					
+					previewiframe(template_id,category_id,url,type,1);
+					
+					return false;
+				});
+
+				$('#submit-all').click(function(){
+					$.ajax({
+				        type: "POST",
+				        url: '/template/clearcache',
+				        //data: {'ajax':1,'url':url},
+				        async:false,
+				        dataType:'json',
+				        success: function(data){
+				        	$('#myModal>.modal-body>p').html(data.msg);
+							$('#myModal').modal('show');
+				    	}
+				    });
+				});
+				
+				$('#template_id').live('change',function(){
+					$('#ajaxarticle').html('');
+					$("#submit").trigger("click");
+				});
+
+				$('#article_id').live('change',function(){
+					$("#article_id_input").val($(this).val());
+					$("#submit").trigger("click");
+				});
+				
+				
+
+				$('#category_id').live('change',function(){
+					$('#ajaxarticle').html('');
+					var template_id = $('#template_id').val();
+					var category_id = $('#category_id').val();
+					$.ajax({
+				        type: "POST",
+				        url: '/template/ajaxtemplate',
+				        data: {'ajax':1,'template_id':template_id,'category_id':category_id,'relation':1},
+				        async:false,
+				        success: function(data){
+					        $('#ajaxtemplate').html(data);
+					        $("#template_id").val(template_id);
+				    	}
+				    });
+				});
+				//默认载入
+				var template_id = <?php echo $getData['template_id']?>;
+				var category_id = <?php echo $getData['category_id']?>;
+				if(category_id){
+					$("#category_id").trigger("change");
+				}
+				var url = "<?php echo $url ?>";
+				var type ="<?php echo $type?>";
+				window.template_article_id = <?php echo $getData['article_id']?>;
+				if(window.template_article_id){
+					getarticle();
+				}
+				previewiframe(template_id,category_id,url,type,0);
+				
+			});
+			
+			
+			function previewiframe(template_id,category_id ,url , type , show_error){
+				
+				if(url){
+					url = url.replace(':url','<?php echo $frontend_baseUrl ?>');
+					url = url.replace(':template_id',template_id)
+								.replace(':parent_id',category_id);
+					if(url.indexOf(':article_id')!=-1){
+						url = url.replace(':article_id',window.template_article_id);
+					}
+					var url_html='<div class="alert alert-success">引用地址 :<a href="'+url+'" target="_blank"><strong>'+url+'</strong></a></div>';
+					$('#loading').html(url_html+'<iframe border="0" vspace="0" hspace="0" marginWidth="0" marginHeight="0" frameSpacing="0" frameBorder="0" scrolling="no" width="100%" height="500px" class="form-horizontal" src="'+url+'">');
+				}else if(show_error == 1){
+					$('#loading').html('<div class="alert alert-error">'+type+'类型的模板数据不存在</div>');
+				}
+				if(show_error){
+					$.ajax({
+				        type: "POST",
+				        url: '/template/hostnode',
+				        data: {'ajax':1,'url':url},
+				        async:false,
+				        dataType:'json',
+				        success: function(data){
+					        
+				        	$('#myModal>.modal-body>p').html(data.msg);
+							$('#myModal').modal('show');
+				    	}
+				    });
+				}
+			}
+			function getarticle(){
+				var template_id = $('#template_id').val();
+				var category_id = $('#category_id').val();
+				var table = window.currtable;
+				
+				$.ajax({
+			        type: "POST",
+			        url: '/template/ajaxarticle',
+			        data: {'ajax':1,'category_id':category_id,'article_id':window.template_article_id,'table':table},
+			        async:false,
+			        success: function(data){
+				        $('#ajaxarticle').html(data);
+				        $("#article_id").val(window.template_article_id);
+			    	}
+			    });
+			}
+			
+			</script>

@@ -1,0 +1,73 @@
+<script type="text/javascript">
+
+
+</script>	
+            <table class="table table-striped table-bordered bootstrap-datatable datatable">
+                <thead>
+                    <tr>
+                        
+                        <th>分组</th>
+                        <th>文件路径</th>
+                        <th>状态</th>
+                        <th>成功条数</th>
+                        <th>忽略条数</th>
+                        <th>失败条数</th>
+                        <th>上传时间</th>
+                        <th>处理时间</th>
+                    </tr>
+                </thead>   
+                <tbody>
+                    <?php
+                    foreach ($page->items as $vs) {
+                        ?>
+                        <tr>
+                            <td ><?php echo $vs->name?></td>
+                            <td ><?php echo $vs->file?></td>
+                            <td ><?php echo $vs->status?></td>
+                            <td><?php echo $vs->succeed?></td>
+                            <td><?php echo $vs->ignore?></td>
+                            <td><?php echo $vs->failed?></td>
+                            <td><?php echo $vs->ctime?></td>
+                            <td><?php echo $vs->mtime?></td>
+                        </tr>
+<?php } ?>
+
+                </tbody>
+            </table>   
+            <div class="row-fluid">
+                    <div class="span12 center">
+                            <div class="dataTables_paginate paging_bootstrap pagination">
+                                    <span class="page_text">共有 <?php echo $page->total_items;?> 条记录, 每页显示 <?php echo $page->pageSize;?> 条, 当前<?php echo $page->current;?>/<?php echo $page->total_pages;?> 页:</span>
+                                    <ul> 
+                                            <li class="prev"><a href="/task/upload">首页</a></li>
+                                            <li class="prev"><a href="/task/upload/2/<?php echo $page->before;?>/<?php echo $page->pageSize;?>">← 上一页</a></li>
+                                            <li class="next"><a href="/task/upload/2/<?php echo $page->next;?>/<?php echo $page->pageSize;?>">下一页 → </a></li>
+                                            <li class=""><a href="/task/upload/2/<?php echo $page->last;?>/<?php echo $page->pageSize;?>">尾页</a></li>
+                                    </ul>
+
+
+                                  <?php echo \Phalcon\Tag::selectStatic(array("pagesize", array('10'=>'10','25' => '25', '50' => '50','100'=>'100'),'class'=>'span1',"value"=>$page->pageSize , "onchange"=>"location.href='/task/upload/2/1/'+this.value;"));?>
+
+
+                            </div>
+                    </div>
+            </div>
+
+<script language="javascript" type="text/javascript">
+    $(function(){
+        $("#language").change(function(){
+            var language = $(this).children('option:selected').val();
+            $('.datatable tbody tr').hide();
+            $('.datatable tbody tr[language="'+language+'"]').show();
+//            $.post('index',{language:language},function(data){
+//                if(!data.status){
+//            },'json');
+        });
+
+      });
+</script>
+
+
+
+
+

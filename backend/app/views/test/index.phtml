@@ -1,0 +1,6 @@
+<?php 
+
+$cates_arr = $this->objToArray->ohYeah($divisionCategory);
+$items = $this->tree->_tree($cates_arr, $parent_id = 0, $level = 0);
+print_r($items);
+?>

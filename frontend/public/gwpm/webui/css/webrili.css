@@ -1,0 +1,9 @@
+/* CSS Document */
+body{ background-color:#fff	}
+.rili-box{ padding:0 !important;font-family: "微软雅黑", Arial, Helvetica, sans-serif;}
+.rili-box .date_1{ border-bottom-color:#b59130; background-color:#f8f8f8}
+.rili-box .d_t1{ background:url(../images/rili-icon.png) no-repeat;}
+.rili-box .Thing{ border-top-color:#976e00; }
+.rili-box .Thing ul{background-color:#f8f8f8}
+.rili-box h1.t_bt{ border-top-color:#b59130; color:#ac7d00; font-size:14px; background:url(../images/h4-tit.png) no-repeat 5px center; height:28px; line-height:28px; padding-left:20px}
+.Calendar{ background-color:#f8f8f8}

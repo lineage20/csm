@@ -1,0 +1,89 @@
+<script type="text/javascript">
+
+
+</script>
+<div class="row-fluid sortable">		
+    <div class="box span12">
+        <div class="box-header" data-original-title>
+            <h2><i class="halflings-icon user"></i><span class="break"></span><?php ?></h2>
+            <div class="box-icon">
+                <a href="#" class="btn-setting"><i class="halflings-icon wrench"></i></a>
+                <a href="#" class="btn-minimize"><i class="halflings-icon chevron-up"></i></a>
+                <a href="#" class="btn-close"><i class="halflings-icon remove"></i></a>
+            </div>
+        </div>
+        
+        <div class="box-content">
+            <div class="row-fluid">
+                <form method="post" action="/contact/uploadHandle" enctype="multipart/form-data">
+                    <table class="table table-striped table-bordered bootstrap-datatable datatable">
+                        <tr>
+                            <td colspan="2" style="padding:5px 10px;">导入文件格式说明：<br />1.文件大小不能超过 1.4 MB<br />
+                                2.请确定文件是从系统中导出后编辑的，否则无法成功导入<br />
+                                3.<a href="/contact/upload/1">上传帐号格式.csv</a>
+                            </td>
+                        </tr>
+                        <?php
+                            $type = Group::find();
+                        ?>
+                        <tr>
+                            <td style="text-align: center;">分组：<select name='type' id="type">
+                                    <?php foreach($type as $val){?>
+                                    <option value='<?php echo $val->id;?>'><?php echo $val->name;?></option>
+                                    <?php }?>
+                                </select></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">
+                                <input type="file" name="file" id="file">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="form-actions">
+                                <button id="submit" type="button" class="btn btn-primary">开始上传</button>
+                            </td>
+                        </tr>                               
+                    </table>
+                </form>
+						</div>
+
+            
+        </div>
+    </div><!--/span-->
+
+</div><!--/row-->
+<script language="javascript" type="text/javascript">
+
+$(document).ready(function(){
+   $("#submit").click(function(){
+       if($("input[type=file]").val()==''){
+                 alert('请选择上传的文件');
+                 return false;
+         }
+         var str=$("input[type=file]").val();
+         var type = $("#type").val();
+         var len=str.lastIndexOf(".");
+         var file_type=str.substring(len+1,str.length);
+        file_type = file_type.toLowerCase();
+       var url = '/contact/uploadHandle/'+type;
+       $.ajaxFileUpload ({
+                 url:url,
+                 secureuri:false,  
+                 fileElementId:'file',
+                 dataType: 'text',
+                 async: false,
+                 success:function(msg){
+                    alert(msg);
+                    return false;
+                 }
+            });
+   }); 
+});
+
+
+</script>
+
+
+
+
+

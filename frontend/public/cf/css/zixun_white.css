@@ -1,0 +1,101 @@
+ @media screen and (max-width: 500px){
+	 body{
+	 	font-size: 100px;
+	 }
+     .right-box{
+	    padding:15px 50px;;
+	}
+	 .right-box h2{
+	 	font-size:2.8rem;
+		text-align:center;
+	 }
+	 .source{
+	 	font-size: 1.8rem;
+		text-align:center;
+	 }
+	 .right-box .newx-conbox p{
+	 	font-size:1.5rem;
+	 	line-height: 4.5rem;
+	 	text-indent: 3.5rem;
+	 }	 
+	 .newx-conbox{
+	 	font-size:1.5rem;
+	 	line-height:3.5rem;
+	 }
+	 .newx-conbox b{
+	 	font-size: 3rem;
+	 }
+	 img {
+	    margin: 20px 0;
+	}
+    }
+
+	 @media screen and (min-width:500px){
+	 body{
+	 	font-size: 100px;
+	 }
+     .right-box{
+	    padding:15px 50px;;
+	}
+	 .right-box h2{
+	 	font-size:3.2rem;
+		text-align:center;
+	 }
+	 .source{
+	 	font-size: 1.8rem;
+		text-align:center;
+	 }
+	 .right-box .newx-conbox p{
+	 	font-size:2.2rem;
+	 	line-height: 4.5rem;
+	 	text-indent:3.5rem;
+	 }	 
+	 .newx-conbox{
+	 	font-size:1.5rem;
+	 	line-height:3.5rem;
+	 }
+	 .newx-conbox b{
+	 	font-size: 3rem;
+	 }
+	 img {
+	    margin: 20px 0;
+	}
+    }
+	
+	
+	
+
+	 @media screen and (min-width:500px){
+	 body{
+	 	font-size: 100px;
+	 }
+     .right-box{
+	    padding:15px 50px;;
+	}
+	 .right-box h2{
+	 	font-size:3.2rem;
+		text-align:center;
+	 }
+	 .source{
+	 	font-size: 1.8rem;
+		text-align:center;
+	 }
+	 .right-box .newx-conbox p{
+	 	font-size:2.2rem;
+	 	line-height: 4.5rem;
+	 	text-indent:3.5rem;
+	 	text-align: justify;
+	 }	 
+	 .newx-conbox{
+	 	font-size:1.5rem;
+	 	line-height:3.5rem;
+	 }
+	 .newx-conbox b{
+	 	font-size: 3rem;
+	 }
+	 img {
+	    margin: 0 auto;
+	    display: block;
+	}
+    }
+

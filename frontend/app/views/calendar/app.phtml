@@ -1,0 +1,33 @@
+﻿<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<title>财经日历</title>
+<link rel=stylesheet media=screen href="http://m.gwfx.com/mobile/css/Public.css"/>
+<link rel="stylesheet" type="text/css" href="http://m.gwfx.com/mobile/css/layout.css"/>
+<link rel="stylesheet" type="text/css" href="http://m.gwfx.com/mobile/css/rili.css"/>
+<link href="/gwfx/css/app.css" type="text/css" rel="stylesheet" />
+<script type="text/javascript"  src="http://m.gwfx.com/mobile/js/jquery.js"></script>
+<script type="text/javascript" src="http://m.gwfx.com/mobile/js/jquery-ui-datepicker.js"></script>
+<script type="text/javascript" src="http://m.gwfx.com/mobile/js/rili.js"></script>
+<script type="text/javascript">
+	$(function() {
+		$("#date_1").change(function() {
+			var d=$("#date_1").val();
+			if(typeof(d)=='undefined' || $.trim(d)==''){
+				alert("请选择查询日期");
+				return;
+			}
+			location.href='/calendar/app/'+d+".html";
+		});
+	});
+</script>
+</head>
+
+<body>
+<div class="rili-box">
+    <?php echo $datas;?>  
+</div>
+</body>
+</html>

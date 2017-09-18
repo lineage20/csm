@@ -1,0 +1,400 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>财经数据 - 恒信贵金属 www.hx9999.com</title>
+<meta name="keywords" content="恒信贵金属,香港恒信贵金属,恒信贵金属有限公司">
+<meta name="description" content="恒信贵金属有限公司于香港注册成立,是“香港金银业贸易场”认可的A类会员第210号行员,香港恒信贵金属电子交易平台发展成熟.恒信贵金属秉承恒信集团“恒心致远,信达天下”的经营理念,为投资者提供金银买卖服务.">
+<link rel="stylesheet" href="http://images.hx9999.com/styles/common.css">
+<link rel="stylesheet" href="http://images.hx9999.com/styles/layout.css">
+<link rel="stylesheet" href="http://images.hx9999.com/styles/info.css">
+<link rel="shortcut icon" href="http://images.hx9999.com/favicon.ico" type="image/x-icon" />
+<script type="text/javascript" src="http://images.hx9999.com/scripts/jquery-1.7.1.min.js"></script>
+<script type="text/javascript" src="http://www.hx9999.com/ad/js/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="http://images.hx9999.com/scripts/function.js"></script>
+<script type="text/javascript" src="http://images.hx9999.com/scripts/jquery.query.js"></script>
+<script type="text/javascript">
+    var newDay;
+    var newMonth;
+    var newYear;
+    var newDayOfWeek;
+    var now = new Date(); //当前日期
+    var nowDayOfWeek = now.getDay(); //今天本周的第几天
+    var nowDay = now.getDate(); //当前日
+    var nowMonth = now.getMonth(); //当前月
+    var nowYear = now.getYear(); //当前年
+    nowYear += (nowYear < 2000) ? 1900 : 0; //
+    var lastMonthDate = new Date(); //上月日期
+    lastMonthDate.setDate(1);
+    lastMonthDate.setMonth(lastMonthDate.getMonth() - 1);
+    var lastYear = lastMonthDate.getYear();
+    var lastMonth = lastMonthDate.getMonth();
+    //格式化日期：yyyy-MM-dd
+    function formatDate(date) {
+        var myyear = date.getFullYear();
+        var mymonth = date.getMonth() + 1;
+        var myweekday = date.getDate();
+        if (parseInt(mymonth) < 10) {
+            mymonth = "0" + parseInt(mymonth);
+        }
+        if (parseInt(myweekday) < 10) {
+            myweekday = "0" + parseInt(myweekday);
+        }
+        return (myyear + "-" + mymonth + "-" + myweekday);
+    }
+
+	//获得本周的日期
+	var weekStartDate = new Date(nowYear, nowMonth, nowDay - nowDayOfWeek+1);
+    var now = new Date(); //当前日期
+    var nowDayOfWeek = now.getDay(); //今天本周的第几天
+    var nowDay = now.getDate(); //当前日
+    var nowMonth = now.getMonth(); //当前月
+    var nowYear = now.getYear(); //当前年
+    nowYear += (nowYear < 2000) ? 1900 : 0; //
+    var lastMonthDate = new Date(); //上月日期
+    lastMonthDate.setDate(1);
+    lastMonthDate.setMonth(lastMonthDate.getMonth() - 1);
+    var lastYear = lastMonthDate.getYear();
+    var lastMonth = lastMonthDate.getMonth();
+    //格式化日期：yyyy-MM-dd
+    function formatDate(date) {
+        var myyear = date.getFullYear();
+        var mymonth = date.getMonth() + 1;
+        var myweekday = date.getDate();
+        if (parseInt(mymonth) < 10) {
+            mymonth = "0" + parseInt(mymonth);
+        }
+        if (parseInt(myweekday) < 10) {
+            myweekday = "0" + parseInt(myweekday);
+        }
+        return (myyear + "-" + mymonth + "-" + myweekday);
+    }
+
+	//获得本周的日期
+	var weekStartDate = new Date(nowYear, nowMonth, nowDay - nowDayOfWeek+1);
+	var myDays=new Array();
+	var week_day_arr = ['一','二','三','四','五','六','日'];
+    var geturldate = '<?php echo str_ireplace(array('index','calendar','hxpm','/') , null , $_SERVER['REQUEST_URI']);?>';
+    // 
+    if($.query.get('date')){
+    	geturldate = $.query.get('date');
+    }
+	$(function(){
+	if (geturldate==''||typeof(geturldate) == "undefined") {
+		      if (nowDayOfWeek==0) {
+              for(var k=0;k<week_day_arr.length;k++){
+				myDays[k]=[formatDate(new Date(nowYear, nowMonth, nowDay - nowDayOfWeek+k+1-7)),week_day_arr[k]];
+		     }
+            }
+			else{
+				for(var k=0;k<week_day_arr.length;k++){
+				myDays[k]=[formatDate(new Date(nowYear, nowMonth, nowDay - nowDayOfWeek+k+1)),week_day_arr[k]];
+		        }
+		    }
+		//$.each()遍历数组
+		$.each(myDays,function(key,val){
+			$('.daily li.w'+(key+1)).html("<a href='#' >"+myDays[key][0]+"<span>星期"+myDays[key][1]+"</span></a>");
+			$('.daily li.w'+(key+1)+'>a').attr({'href':'/calendar/hxpm/'+myDays[key][0]});
+		});
+
+		$('.daily li').click(function(){
+			$('.daily li>a').removeClass("on");
+			$(this).find('a').addClass("on");
+			//两个日历同步
+			var searchval = $(this).find('a:not(span)').text().substr(0,10);
+			$('#searchDate').val(searchval);
+			ajax_ashx($('#searchDate').val());//点击日历请求获取数据
+		});
+        //以下两行为input时间框初始值及高亮显示当前日期
+        if (nowDayOfWeek==0) {
+            $('.daily li.w'+(nowDayOfWeek+7)+'>a').addClass("on");
+        }else{
+        	$('.daily li.w'+nowDayOfWeek+'>a').addClass("on");
+        }
+
+
+        if (parseInt(nowMonth)<9) {
+         var changemonth ='0'+(parseInt(nowMonth)+1);
+        }
+        else{
+         var changemonth = (parseInt(nowMonth)+1);
+        }
+        if (parseInt(nowDay)<10) {
+         var changeday = '0'+nowDay;
+        }
+        else{
+         var changeday = nowDay;
+        }
+		$('#searchDate').val(nowYear+'-'+changemonth+'-'+changeday);
+
+
+
+		// $('#ifr_fe').attr({'src':'http://www.hx9999.com/cn/fe_calendar.html?date='+formatDate(new Date(nowYear, nowMonth, nowDay))});
+		//两个日期联动
+		$('#search').click(function(){
+        var t = $('#searchDate').val();
+        // $('#nowDate').val(t);
+          newDay = t.substr(8,2); //选择前日
+          newMonth = t.substr(5,2); //选择前月
+          newYear = t.substr(0,4); //选择前年
+          var ddofweek = new Date(newYear,newMonth-1,newDay);
+          newDayOfWeek = ddofweek.getDay();
+          liandongDate();
+          ajax_ashx(t);
+		});
+
+		//以上为日历时间控件设置等,以下为数据请求获取及显示
+		// $date=QueryString("date");
+		// if ($date){}
+		ajax_ashx($('#searchDate').val());
+		}
+
+		else{//刷新页面后以页面时间参数为准，重新赋值
+
+			nowDay = geturldate.substr(8,2); //选择前日
+            nowMonth = geturldate.substr(5,2); //选择前月
+            nowYear = geturldate.substr(0,4); //选择前年
+            var aaofweek = new Date(nowYear,nowMonth-1,nowDay);
+            nowDayOfWeek = aaofweek.getDay();
+            if (nowDayOfWeek==0) {
+              for(var k=0;k<week_day_arr.length;k++){
+				myDays[k]=[formatDate(new Date(nowYear, nowMonth-1, nowDay - nowDayOfWeek+k+1-7)),week_day_arr[k]];
+		     }
+            }
+			else{
+				for(var k=0;k<week_day_arr.length;k++){
+				myDays[k]=[formatDate(new Date(nowYear, nowMonth-1, nowDay - nowDayOfWeek+k+1)),week_day_arr[k]];
+		        }
+		    }
+		//$.each()遍历数组
+		$.each(myDays,function(key,val){
+			$('.daily li.w'+(key+1)).html("<a href='#' >"+myDays[key][0]+"<span>星期"+myDays[key][1]+"</span></a>");
+			$('.daily li.w'+(key+1)+'>a').attr({'href':'/calendar/hxpm/'+myDays[key][0]});
+		});
+
+		$('.daily li').click(function(){
+			$('.daily li>a').removeClass("on");
+			$(this).find('a').addClass("on");
+			//两个日历同步
+			var searchval = $(this).find('a:not(span)').text().substr(0,10);
+			$('#searchDate').val(searchval);
+			ajax_ashx($('#searchDate').val());
+		});
+        //以下两行为input时间框初始值及高亮显示当前日期
+        if (nowDayOfWeek==0) {
+         $('.daily li.w'+(nowDayOfWeek+7)+'>a').addClass("on");
+        }
+        else{
+        	$('.daily li.w'+nowDayOfWeek+'>a').addClass("on");
+        }
+
+		if (parseInt(nowMonth)<10) {
+         var changemonth ='0'+parseInt(nowMonth);
+        }
+        else{
+         var changemonth = parseInt(nowMonth);
+        }
+        if (parseInt(nowDay)<10) {
+         var changeday = '0'+parseInt(nowDay);
+        }
+        else{
+         var changeday = parseInt(nowDay);
+        }
+		$('#searchDate').val(nowYear+'-'+changemonth+'-'+changeday);
+		$('#ifr_fe').attr({'src':'http://www.hx9999.com/cn/fe_calendar.html?date='+formatDate(new Date(nowYear, nowMonth, nowDay))});
+		//两个日期联动
+		$('#search').click(function(){
+        var t = $('#searchDate').val();
+        // $('#nowDate').val(t);
+          newDay = t.substr(8,2); //选择前日
+          newMonth = t.substr(5,2); //选择前月
+          newYear = t.substr(0,4); //选择前年
+          var ddofweek = new Date(newYear,newMonth-1,newDay);
+          newDayOfWeek = ddofweek.getDay();
+          liandongDate();
+          ajax_ashx(t);
+		});
+		ajax_ashx($('#searchDate').val());
+		}
+
+		// //以上为日历时间控件设置等,以下为数据请求获取及显示
+		// $date=QueryString("date");
+		// if ($date){}
+		// ajax_ashx(geturldate);
+	});
+    function liandongDate(){
+		for(var k=0;k<week_day_arr.length;k++){
+				myDays[k]=[formatDate(new Date(newYear, newMonth-1, newDay - newDayOfWeek+k+1)),week_day_arr[k]];
+		}
+
+		//$.each()遍历数组
+		$.each(myDays,function(key,val){
+			if((key+1)==newDayOfWeek){
+             $('.daily li.w'+(key+1)).html("<a href='#'  class='on'>"+myDays[key][0]+"<span>星期"+myDays[key][1]+"</span></a>");
+			$('.daily li.w'+(key+1)+'>a').attr({'href':'/calendar/hxpm/'+myDays[key][0]});
+			}
+			else{
+				$('.daily li.w'+(key+1)).html("<a href='#' >"+myDays[key][0]+"<span>星期"+myDays[key][1]+"</span></a>");
+			$('.daily li.w'+(key+1)+'>a').attr({'href':'/calendar/hxpm/'+myDays[key][0]});
+			}
+		});
+    }
+function QueryString(item){
+	var serachurl = $('.daily li>a').attr('href');
+	var sValue=serachurl.match(new RegExp("[\?\&]"+item+"=([^\&]*)(\&?)","i"));
+	return sValue?sValue[1]:sValue;
+}
+
+function ajax_ashx(date) {
+    $.post('/calendar/hxpmjson',
+		{nowDate:date},
+		function(data){
+			$(".fe_loading").hide();
+			$(".rili_tab01 tr:first").siblings().remove();
+			$(".rili_tab02 tr:first").siblings().remove();
+			$(".rili_tab03 tr:first").siblings().remove();
+			var ret = typeof(data.finance.financeEventList) == "undefined"?'':data.finance.financeEventList;
+			var rea = typeof(data.finance.financeVacationList) == "undefined"?'':data.finance.financeVacationList;
+			var res = typeof(data.finance.financeDataList) == "undefined"?'':data.finance.financeDataList;
+			if (ret!='') {
+				if (typeof(ret.length)=='undefined') {
+					var retRow = "<tr><td>"+ret["eventTime"]+"</td><td >"+ret["eventCountry"]+"</td><td align='left'>"+ret["eventContent"]+"</td></tr>";
+					$(".rili_tab01 tr:last").after(retRow);
+				}else{
+					for(var i=0;i<ret.length;i++){
+					var retRow = "<tr><td>"+ret[i]["eventTime"]+"</td><td >"+ret[i]["eventCountry"]+"</td><td align='left'>"+ret[i]["eventContent"]+"</td></tr>";
+					$(".rili_tab01 tr:last").after(retRow);
+					}
+				}
+			}
+			else{
+				var retRow ="<tr><td>"+'今日无重要数据公布！'+"</td><td></td><td></td></tr>";
+				$(".rili_tab01 tr:last").after(retRow);
+			}
+			if (rea!='') {
+				if (typeof(rea.length)=='undefined') {
+					var reaRow = "<tr><td>"+rea["vacationDate"].substr(0,10)+"</td><td >"+rea["vacationCountry"]+"</td><td>"+rea["vacationContent"]+"</td></tr>";
+					$(".rili_tab02 tr:last").after(reaRow);
+				}else{
+					for(var i=0;i<rea.length;i++){
+					var reaRow = "<tr><td>"+rea[i]["vacationDate"].substr(0,10)+"</td><td >"+rea[i]["vacationCountry"]+"</td><td>"+rea[i]["vacationContent"]+"</td></tr>";
+					$(".rili_tab02 tr:last").after(reaRow);
+					}
+				}
+			}
+			else{
+				var reaRow ="<tr><td>"+'今日无重要数据公布！'+"</td><td></td><td></td></tr>";
+				$(".rili_tab02 tr:last").after(reaRow);
+			}
+			if (res!='') {
+				if (typeof(res.length)=='undefined') {
+				var newRow = "<tr><td>"+res["fdTime"]+"</td><td >"+res["fdCountry"]+"</td><td>"+res["fdTitle"]+"</td><td >"+res["lastValue"]+"</td><td >"+res["prediction"]+"</td><td >"+res["actual"]+"</td></tr>";
+				$(".rili_tab03 tr:last").after(newRow);
+				}else{
+					for(var i=0;i<res.length;i++){
+						var newRow = "<tr><td>"+res[i]["fdTime"]+"</td><td >"+res[i]["fdCountry"]+"</td><td>"+res[i]["fdTitle"]+"</td><td >"+res[i]["lastValue"]+"</td><td >"+res[i]["prediction"]+"</td><td >"+res[i]["actual"]+"</td></tr>";
+						$(".rili_tab03 tr:last").after(newRow);
+					}
+				}
+			}
+			else{
+				var newRow ="<tr><td>"+'今日无重要数据公布！'+"</td><td></td><td></td></tr>";
+				$(".rili_tab03 tr:last").after(newRow);
+			}
+			//sethash(res.length+rea.length+ret.length+3);
+		},'json');
+	return false;
+}
+</script>
+<script type="text/javascript">var currentNav = 'trend';</script>
+<style>
+.li_subMenu{height:60px;}
+.daily>li>a,.daily>li>a.on{font-weight:normal;border:0;padding:6px 13px;height:48px;line-height:1.4em;}
+.daily>li>a.on{color:#fff;background-color:#ffa733;}
+.daily>li>a:hover{color:#999;background:#f1f1f1;}
+.daily>li>a>span{display:block;}
+#wrapper_inner{padding-left:10px;margin-top:5px;}
+#wrapper_inner h1 {
+    border-bottom: 1px solid #e5c49d;
+    color: #d9a402;
+    font-size: 24px;
+    line-height: 25px;
+    padding-bottom: 20px;
+}
+</style>
+</head>
+<body>
+
+<div id="wrapper_inner" class=" trend clear">
+
+		<h1>财经日历</h1>
+		<!--content-->
+		<div class="content">
+			<div class="newfe_tit">
+				<span>按照公布日期查询：</span>
+				<form action="/calendar/hxpm/" type="get">
+					<input id="searchDate" class="date_input" onClick="WdatePicker({minDate:'2012-01-01'})" type="text" name="date" value="" readonly="readonly"/>
+					<input class="button" id="search" type="submit" value="查询" />
+				</form>
+			</div>
+			<ul class="daily li_subMenu">
+				<li class="w1"></li>
+				<li class="w2"></li>
+				<li class="w3"></li>
+				<li class="w4"></li>
+				<li class="w5"></li>
+				<li class="w6"></li>
+				<li class="w7"></li>
+			</ul>
+			<div class="clear"></div>
+			<div class="fe_events">
+				<h5>财经事件</h5>
+				<table border="0" cellpadding="0" cellspacing="0" class="rili_tab01">
+					<tr>
+						<th width="10%">时间</th>
+						<th width="15%">国家</th>
+						<th>事件</th>
+					</tr>
+				</table>
+				<div class="fe_loading"><img src="http://images.hx9999.com/loading.gif" alt="" /></div>
+			</div>
+
+			<div class="fe_holiday">
+				<h5>假期预告</h5>
+				<table border="0" cellpadding="0" cellspacing="0" class="rili_tab02">
+					<tr>
+						<th>时间</th>
+						<th>国家</th>
+						<th>事件</th>
+					</tr>
+				</table>
+				<div class="fe_loading"><img src="http://images.hx9999.com/loading.gif" alt="" /></div>
+			</div>
+
+			<div class="fe_datas">
+				<h5>财经数据</h5>
+				<table border="0" align="center" cellpadding="0" cellspacing="0" class="rili_tab03">
+					<tr>
+						<th>时间</th>
+						<th>国家</th>
+						<th>指标名称</th>
+						<th>前值</th>
+						<th>预测值</th>
+						<th>公布值</th>
+					</tr>
+				</table>
+				<div class="fe_loading"><img src="http://images.hx9999.com/loading.gif" alt="" /></div>
+			</div>
+		</div>
+		<!--//content end-->
+
+</div>
+
+<script type="text/javascript">
+
+document.write('<div style=" height:0; overflow:hidden; margin:0px; padding:0px;"></div>');
+document.write('<div style=" height:0; overflow:hidden; margin:0px; padding:0px;"></div>');
+//end
+</script>
+</body>
+</html>

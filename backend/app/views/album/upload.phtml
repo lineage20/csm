@@ -1,0 +1,85 @@
+<script type="text/javascript">
+
+
+</script>
+<div class="row-fluid sortable">		
+    <div class="box span12">
+        <div class="box-header" data-original-title>
+            <h2><i class="halflings-icon user"></i><span class="break"></span><?php ?></h2>
+            <div class="box-icon">
+                <a href="#" class="btn-setting"><i class="halflings-icon wrench"></i></a>
+                <a href="#" class="btn-minimize"><i class="halflings-icon chevron-up"></i></a>
+                <a href="#" class="btn-close"><i class="halflings-icon remove"></i></a>
+            </div>
+        </div>
+        
+        <div class="box-content">
+            <div class="row-fluid">
+                <form method="post" action="/album/uploadHandle" enctype="multipart/form-data" target="hidden_frame">
+							<div class="control-group">
+                                                            <div style="float:left">上传到</div>
+								<div class="controls" style="float:left;margin-left: 30px;">
+                                                                    <select id="folder" name="folder">
+                                                                        <?php 
+                                                                                $folder_arr = $this->objToArray->ohYeah($folder);
+                                                                                foreach ($folder_arr as $vs){?>
+                                                                        <option  value="<?php echo $vs['folder'];?>">
+                                                                                    <?php echo $vs['folder'];?>
+                                                                                </option>
+                                                                        <?php }?>
+								  </select>
+								</div>
+							  </div>
+                                                          <div style="text-align: center;">
+                                                              <input type="file" name="file">
+                                                          </div>
+                                                          <div class="form-actions">
+                                                              <button id="submit" type="submit" class="btn btn-primary">开始上传</button>
+							  </div>
+                </form>
+                <iframe  style="display: none" name='hidden_frame' id="hidden_frame"></iframe>  
+						</div>
+
+            
+        </div>
+    </div><!--/span-->
+
+</div><!--/row-->
+<script>
+function showmodel(data){
+$(document).ready(function(){
+	var msg = data.msg;
+	if(!data.status){
+		msg = '上传图片成功';
+	}else{
+		switch(data.code){
+			case 1:
+				msg= '请选择上传图片';
+				break;
+			case 2:
+				msg= '上传图片扩展名是不允许的扩展名';
+				break;
+			case 3:
+				msg= '上传图片大小超过限制';
+				break;
+			case 4:
+				msg= '不能重复上传图片';
+				break;
+			case 5:
+				msg= '未知错误';
+				break;
+		default:
+			break;
+		}
+	}
+	$('#myModal>.modal-body>p').html(msg);
+	$('#myModal').modal('show');
+});
+};
+
+</script>
+
+
+
+
+

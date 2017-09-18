@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:dc="http://purl.org/dc/elements/1.1/" version="2.0">
+  <channel>
+    <title></title>
+    <link>http://www.example.com</link>
+    <description>XXXX RSS</description>
+    <?php foreach ($articles as $article) {?>
+	<item>
+      <title><?php echo $article->title?></title>
+      <link>http://www.example.com/detail/html/1/<?php echo $article->category_id?>/<?php echo $article->id?>/</link>
+      <description></description>
+      <pubDate><?php echo $article->ctime?></pubDate>
+      <guid>/detail/html/1/<?php echo $article->category_id?>/<?php echo $article->id?>/</guid>
+      <dc:date><?php echo $article->ctime?></dc:date>
+    </item>
+	<?php }?>
+  </channel>
+</rss>
+
